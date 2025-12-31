@@ -1,0 +1,19 @@
+package title
+
+import (
+	"context"
+
+	v1 "server/api/title/v1"
+	"server/internal/service"
+)
+
+func (c *ControllerV1) GetEdit(ctx context.Context, req *v1.GetEditReq) (res *v1.GetEditRes, err error) {
+	detail, err := service.Title().GetEdit(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	res = &v1.GetEditRes{
+		Edit: detail,
+	}
+	return
+}

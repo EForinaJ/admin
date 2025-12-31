@@ -1,0 +1,23 @@
+package v1
+
+import (
+	dao_recharge "server/internal/type/recharge/dao"
+	dto_recharge "server/internal/type/recharge/dto"
+
+	"github.com/gogf/gf/v2/frame/g"
+)
+
+type GetListReq struct {
+	g.Meta `path:"/recharge/list" method:"get" tags:"充值" summary:"充值记录列表"`
+	*dto_recharge.Query
+}
+type GetListRes struct {
+	Total int                  `json:"total" dc:"总数"`
+	List  []*dao_recharge.List `json:"list" dc:"充值记录列表"`
+}
+
+type DeleteReq struct {
+	g.Meta `path:"/recharge/revoke" method:"post" tags:"充值" summary:"删除充值记录"`
+	Ids    []int64 `json:"ids" v:"required|array#ids不能为空|删除列表是一个数组"`
+}
+type DeleteRes struct{}
