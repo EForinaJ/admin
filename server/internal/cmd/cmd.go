@@ -22,7 +22,7 @@ var (
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			casbin.InitEnforcer(ctx)
 			s := g.Server()
-			s.AddStaticPath("/public", "./public")
+			s.AddStaticPath("/public", "../../public")
 			router.LoadRouter(s)
 			s.Run()
 			return nil

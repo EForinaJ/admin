@@ -15,16 +15,9 @@ export function fetchPostWitkeyCreate(data: Witkey.Params.Model) {
 }
 
 
-export function fetchGetWitkeyEdit(params: {id:number}) {
-  return request.get<Witkey.Response.Edit>({
-    url: '/witkey/edit',
-    params
-  })
-}
-
-export function fetchPostWitkeyEdit(data: Witkey.Params.Model) {
+export function fetchPostWitkeyChangeTitle(data: Witkey.Params.ChangeTitle) {
   return request.post({
-    url: '/witkey/edit',
+    url: '/witkey/change/title',
     data
   })
 }

@@ -13,6 +13,7 @@ import (
 type SysWitkey struct {
 	g.Meta      `orm:"table:sys_witkey, do:true"`
 	Id          interface{} // 用户ID
+	Name        interface{} //
 	UserId      interface{} //
 	TitleId     interface{} //
 	GameId      interface{} //

@@ -20,38 +20,42 @@ type SysManageDao struct {
 
 // SysManageColumns defines and stores column names for the table sys_manage.
 type SysManageColumns struct {
-	Id         string // 用户ID
-	Name       string // 用户昵称
-	Phone      string // 手机号码
-	Sex        string //
-	Avatar     string // 头像地址
-	Password   string // 密码
-	Salt       string // 密码盐
-	Status     string // 帐号状态（1停用,2正常）
-	Qq         string //
-	Wechat     string //
-	CreateTime string // 创建时间
-	UpdateTime string // 更新时间
-	Remark     string // 备注
-	DeleteTime string // 软删除
+	Id          string // 用户ID
+	Name        string // 用户昵称
+	Phone       string // 手机号码
+	Email       string //
+	Tags        string //
+	Address     string //
+	Sex         string //
+	Avatar      string // 头像地址
+	Password    string // 密码
+	Salt        string // 密码盐
+	Status      string // 帐号状态（1停用,2正常）
+	Description string //
+	CreateTime  string // 创建时间
+	UpdateTime  string // 更新时间
+	Remark      string // 备注
+	DeleteTime  string // 软删除
 }
 
 // sysManageColumns holds the columns for the table sys_manage.
 var sysManageColumns = SysManageColumns{
-	Id:         "id",
-	Name:       "name",
-	Phone:      "phone",
-	Sex:        "sex",
-	Avatar:     "avatar",
-	Password:   "password",
-	Salt:       "salt",
-	Status:     "status",
-	Qq:         "qq",
-	Wechat:     "wechat",
-	CreateTime: "create_time",
-	UpdateTime: "update_time",
-	Remark:     "remark",
-	DeleteTime: "delete_time",
+	Id:          "id",
+	Name:        "name",
+	Phone:       "phone",
+	Email:       "email",
+	Tags:        "tags",
+	Address:     "address",
+	Sex:         "sex",
+	Avatar:      "avatar",
+	Password:    "password",
+	Salt:        "salt",
+	Status:      "status",
+	Description: "description",
+	CreateTime:  "create_time",
+	UpdateTime:  "update_time",
+	Remark:      "remark",
+	DeleteTime:  "delete_time",
 }
 
 // NewSysManageDao creates and returns a new DAO object for table data access.

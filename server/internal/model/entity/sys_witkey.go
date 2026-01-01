@@ -11,6 +11,7 @@ import (
 // SysWitkey is the golang structure for table sys_witkey.
 type SysWitkey struct {
 	Id          int64       `json:"id"          orm:"id"          description:"用户ID"` // 用户ID
+	Name        string      `json:"name"        orm:"name"        description:""`     //
 	UserId      int64       `json:"userId"      orm:"user_id"     description:""`     //
 	TitleId     int64       `json:"titleId"     orm:"title_id"    description:""`     //
 	GameId      int64       `json:"gameId"      orm:"game_id"     description:""`     //

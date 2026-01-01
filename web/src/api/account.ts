@@ -23,3 +23,18 @@ export function fetchGetAccountMenus() {
     url: '/account/menus'
   })
 }
+
+
+export function fetchPostAccountEdit(data: Account.Params.Model) {
+  return request.post({
+    url: '/account/edit',
+    data
+  })
+}
+
+export function fetchPostAccountChangePass(data: Account.Params.ChangePass) {
+  return request.post({
+    url: '/account/change/pass',
+    data
+  })
+}

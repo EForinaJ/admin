@@ -15,13 +15,7 @@ func (s *sSite) GetTitleOptions(ctx context.Context, id int64) (res []*dao_site.
 		OrderDesc(dao.SysTitle.Columns().CreateTime).
 		Fields(dao.SysTitle.Columns().Id, dao.SysTitle.Columns().Name)
 
-	titleId, err := dao.SysTitle.Ctx(ctx).
-		Where(dao.SysTitle.Columns().GameId, id).
-		Value(dao.SysTitle.Columns().Id)
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
-	m = m.Where(dao.SysTitle.Columns().Id, titleId)
+	m = m.Where(dao.SysTitle.Columns().GameId, id)
 
 	var list []*entity.SysTitle
 	err = m.Scan(&list)

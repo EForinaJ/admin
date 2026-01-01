@@ -30,22 +30,5 @@ declare namespace Comment {
 
         }
         type List = Api.Common.PaginatedResponse<Info>
-
-        type Detail = {
-            id: number;
-            code:string;
-            manage: string;
-            witkey:string;
-            amount:number;
-            settledAmount:number;
-            serviceFee:number;
-            type:number;
-            number:string;
-            name:string;
-            status:number;
-            reason:string;
-            createTime:string;
-        }
-
     }
 }

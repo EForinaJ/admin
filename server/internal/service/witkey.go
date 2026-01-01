@@ -10,15 +10,15 @@ import (
 type IWitkey interface {
 	CheckExist(ctx context.Context, witkeyId int64) (err error)
 	CheckCommission(ctx context.Context, req *dto_witkey.Commission) (err error)
+	CheckChangeTitle(ctx context.Context, req *dto_witkey.ChangeTitle) (err error)
 
+	ChangeTitle(ctx context.Context, req *dto_witkey.ChangeTitle) (err error)
 	ChangeCommission(ctx context.Context, req *dto_witkey.Commission) (err error)
 	Create(ctx context.Context, req *dto_witkey.Create) (err error)
-	Edit(ctx context.Context, req *dto_witkey.Edit) (err error)
 	Delete(ctx context.Context, ids []int64) (err error)
 
 	GetCommissionList(ctx context.Context, req *dto_witkey.CommissionQuery) (total int, res []*dao_witkey.CommissionList, err error)
 	GetDetail(ctx context.Context, id int64) (res *dao_witkey.Detail, err error)
-	GetEdit(ctx context.Context, id int64) (res *dao_witkey.Edit, err error)
 	GetList(ctx context.Context, req *dto_witkey.Query) (total int, res []*dao_witkey.List, err error)
 }
 

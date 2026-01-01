@@ -37,7 +37,6 @@
       <!-- 弹窗 -->
       <WitkeyDialog
         v-model="dialogVisible"
-        :type="dialogType"
         :id="id"
         @submit="refreshData"
       />
@@ -54,12 +53,12 @@
         :id="id"
         @submit="refreshData"
       />
-      <!-- 充值弹窗 -->
-      <!-- <WitkeyRechargeModal
-        v-model:visible="rechargeModalVisible"
+
+      <WitkeyTitleDialog
+        v-model:visible="changeTitleDialogVisible"
         :id="id"
         @submit="refreshData"
-      /> -->
+      />
     </ElCard>
   </div>
 </template>
@@ -76,18 +75,18 @@ import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
 import ArtButtonMore from '@/components/core/forms/art-button-more/index.vue'
 import WitkeyViewDrawer from './modules/witkey-view-drawer.vue'
 import WitkeyChangeCommissionModal from './modules/witkey-change-commission-modal.vue'
+import { Status } from '@/enums/statusEnum'
+import WitkeyTitleDialog from './modules/witkey-title-dialog.vue'
 
 
 const { hasAuth } = useAuth();
 defineOptions({ name: 'Witkey' })
 
 
-// 弹窗相关
-const dialogType = ref<"create" | "edit">('create')
 const dialogVisible = ref(false)
 const viewDrawerVisible = ref(false)
 const changeCommissionModalVisible = ref(false)
-const rechargeModalVisible = ref(false)
+const changeTitleDialogVisible = ref(false)
 const id = ref<number>(0)
 
 // 选中行
@@ -99,7 +98,19 @@ const searchForm = ref({
   phone: undefined,
 })
 
+const STATUS = {
+  [Status.Disable]: { type: 'danger' as const, text: '禁用' },
+  [Status.Enable]: { type: 'success' as const, text: '启用' },
+} as const
 
+const getStatus = (status: number) => {
+  return (
+    STATUS[status as keyof typeof STATUS] || {
+      type: 'info' as const,
+      text: '未知'
+    }
+  )
+}
 const {
   columns,
   columnChecks,
@@ -127,6 +138,7 @@ const {
     columnsFactory: () => [
       { type: 'selection' }, // 勾选列
       { prop: 'id', width: 60, label: 'ID' }, // 序号
+      { prop: 'name',  label: '威客昵称' }, // 序号
       {
         prop: 'userInfo',
         label: '所属用户',
@@ -164,6 +176,7 @@ const {
       { 
         prop: 'rate', 
         label: '评分',
+        width: 200,
         formatter: (row) => {
           return h(ElRate , {
             modelValue: row.rate,
@@ -173,16 +186,18 @@ const {
           })
         }
       },
-      // { 
-      //   prop: 'commission', 
-      //   label: '佣金',
-      //   formatter: (row) => {
-      //     return h(ElTag, { type: "primary" }, () => `${row.commission}${siteStore.getInfo.symbol}`)
-      //   }
-      // },
+      {
+        prop: 'status',
+        label: '接单状态',
+        formatter: (row) => {
+          const statusConfig = getStatus(row.status)
+          return h(ElTag, { type: statusConfig.type }, () => statusConfig.text)
+        }
+      },
       {
         prop: 'createTime',
         label: '入驻日期',
+        width: 200,
         sortable: true
       },
       {
@@ -198,6 +213,12 @@ const {
             })),
             h(ArtButtonMore, {
               list: [
+                {
+                  key: 'changeTitle',
+                  label: '变更头衔',
+                  icon: 'ep:element-plus',
+                  auth:'changeTitle'
+                },
                 {
                   key: 'changeCommission',
                   label: '变更佣金',
@@ -241,11 +262,8 @@ const buttonMoreClick = (item: ButtonMoreItem, row: Witkey.Response.Info) => {
     case 'changeCommission':
       handleChangeCommission(row)
       break
-    case 'recharge':
-      handleRecharge(row)
-      break
-    case 'edit':
-      handleEdit(row)
+    case 'changeTitle':
+      handleChangeTitle(row)
       break
     case 'delete':
       handleDelete(row)
@@ -268,17 +286,15 @@ const handleSearch = (params: Record<string, any>) => {
  * 显示威客弹窗
  */
 const handleCreate = (): void => {
-  dialogType.value = "create"
   id.value = 0
   nextTick(() => {
     dialogVisible.value = true
   })
 }
-const handleEdit = (row:Witkey.Response.Info) => {
-   dialogType.value = "edit"
+const handleChangeTitle = (row:Witkey.Response.Info) => {
    id.value = row.id
    nextTick(() => {
-    dialogVisible.value = true
+    changeTitleDialogVisible.value = true
   })
 }
 const handleView = (row:Witkey.Response.Info) => {
@@ -293,12 +309,7 @@ const handleChangeCommission = (row:Witkey.Response.Info): void => {
     changeCommissionModalVisible.value = true
   })
 }
-const handleRecharge = (row:Witkey.Response.Info): void => {
-  id.value = row.id
-  nextTick(() => {
-    rechargeModalVisible.value = true
-  })
-}
+
 
 const handleBatchDelete = () =>{
   if (selectedRows.value.length != 0) {

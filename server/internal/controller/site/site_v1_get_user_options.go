@@ -8,7 +8,7 @@ import (
 )
 
 func (c *ControllerV1) GetUserOptions(ctx context.Context, req *v1.GetUserOptionsReq) (res *v1.GetUserOptionsRes, err error) {
-	list, err := service.Site().GetUserOptions(ctx, req.Name)
+	list, err := service.Site().GetUserOptions(ctx, req.Phone)
 	if err != nil {
 		return nil, err
 	}

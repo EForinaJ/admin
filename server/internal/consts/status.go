@@ -25,18 +25,3 @@ const (
 	OrderStatusCancel         = 5 // 已取消
 	OrderStatusRefund         = 6 // 已退款
 )
-
-const (
-	OrderWitkeyStatusPending    = 1 // 待服务
-	OrderWitkeyStatusInProgress = 2 // 进行中
-	OrderWitkeyStatusComplete   = 3 // 已完成
-	OrderWitkeyStatusCancel     = 4 // 已取消
-)
-
-const (
-	ProjectStatusPending           = 1 // 待服务
-	ProjectStatusInProgress        = 2 // 进行中
-	ProjectStatusPendingSettlement = 3 // 待结算
-	ProjectStatusCancel            = 4 // 已取消
-	ProjectStatusSettlement        = 5 // 已结算
-)

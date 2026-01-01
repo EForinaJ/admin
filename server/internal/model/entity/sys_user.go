@@ -25,8 +25,6 @@ type SysUser struct {
 	Cover       string      `json:"cover"       orm:"cover"       description:""`                //
 	Experience  int64       `json:"experience"  orm:"experience"  description:""`                //
 	Balance     float64     `json:"balance"     orm:"balance"     description:"余额"`              // 余额
-	Commission  float64     `json:"commission"  orm:"commission"  description:""`                //
-	Deposit     float64     `json:"deposit"     orm:"deposit"     description:""`                //
 	Description string      `json:"description" orm:"description" description:""`                //
 	Status      int         `json:"status"      orm:"status"      description:"帐号状态（1停用,2正常）"`   // 帐号状态（1停用,2正常）
 	CreateTime  *gtime.Time `json:"createTime"  orm:"create_time" description:"创建时间"`            // 创建时间

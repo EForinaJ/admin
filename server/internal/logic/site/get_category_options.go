@@ -15,14 +15,7 @@ func (s *sSite) GetCategoryOptions(ctx context.Context, id int64) (res []*dao_si
 	m := dao.SysCategory.Ctx(ctx).
 		OrderDesc(dao.SysCategory.Columns().CreateTime).
 		Fields(dao.SysCategory.Columns().Id, dao.SysCategory.Columns().Name)
-
-	categoryId, err := dao.SysCategory.Ctx(ctx).
-		Where(dao.SysCategory.Columns().GameId, id).
-		Value(dao.SysCategory.Columns().Id)
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
-	m = m.Where(dao.SysCategory.Columns().Id, categoryId)
+	m = m.Where(dao.SysCategory.Columns().GameId, id)
 
 	var list []*entity.SysCategory
 	err = m.Scan(&list)

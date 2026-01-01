@@ -26,12 +26,31 @@ func (s *sSettlement) CheckApply(ctx context.Context, req *dto_settlement.Apply)
 	if err != nil {
 		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
-	if orderStatus.Int() != consts.OrderStatusComplete {
-		return utils_error.Err(response.FAILD, "订单未完成，无法审核结算")
+	if orderStatus.Int() == consts.OrderStatusInProgress {
+		return utils_error.Err(response.FAILD, "订单正在进行中，无法审核结算")
+	}
+	if orderStatus.Int() == consts.OrderStatusPendingOrder {
+		return utils_error.Err(response.FAILD, "订单等待服务中，无法审核结算")
+	}
+	if orderStatus.Int() == consts.OrderStatusCancel {
+		return utils_error.Err(response.FAILD, "订单已取消，无法审核结算")
+	}
+	if orderStatus.Int() == consts.OrderStatusPendingPayment {
+		return utils_error.Err(response.FAILD, "订单未支付，无法审核结算")
 	}
 
 	if gconv.Int(obj.GMap().Get(dao.SysSettlement.Columns().Status)) != consts.StatusApply {
 		return utils_error.Err(response.FAILD, "该报单结算已审核")
+	}
+
+	aftersalesStatus, err := dao.SysAftersales.Ctx(ctx).
+		Where(dao.SysAftersales.Columns().OrderId, obj.GMap().Get(dao.SysSettlement.Columns().OrderId)).
+		Value(dao.SysAftersales.Columns().Status)
+	if err != nil {
+		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
+	}
+	if aftersalesStatus.Int() == consts.StatusApply {
+		return utils_error.Err(response.FAILD, "订单提交售后工单未处理，无法审核结算")
 	}
 
 	return

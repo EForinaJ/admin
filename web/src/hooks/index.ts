@@ -30,3 +30,5 @@ export { useChart, useChartComponent, useChartOps } from './core/useChart'
 
 // 布局高度
 export { useLayoutHeight, useAutoLayoutHeight } from './core/useLayoutHeight'
+// 防抖
+export { useDebounce } from './common/useDebounce'

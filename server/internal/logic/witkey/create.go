@@ -2,6 +2,7 @@ package witkey
 
 import (
 	"context"
+	"server/internal/consts"
 	"server/internal/dao"
 	dto_witkey "server/internal/type/witkey/dto"
 	utils_error "server/internal/utils/error"
@@ -17,6 +18,8 @@ func (s *sWitkey) Create(ctx context.Context, req *dto_witkey.Create) (err error
 		dao.SysWitkey.Columns().UserId:     req.UserId,
 		dao.SysWitkey.Columns().GameId:     req.GameId,
 		dao.SysWitkey.Columns().TitleId:    req.TitleId,
+		dao.SysWitkey.Columns().Name:       req.Name,
+		dao.SysWitkey.Columns().Status:     consts.Enable,
 		dao.SysWitkey.Columns().Rate:       req.Rate,
 		dao.SysWitkey.Columns().CreateTime: gtime.Now(),
 		dao.SysWitkey.Columns().UpdateTime: gtime.Now(),

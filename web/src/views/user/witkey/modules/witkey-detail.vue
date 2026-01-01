@@ -12,6 +12,12 @@
             </div>
         </template>
         <ElDescriptions>
+            <ElDescriptionsItem :span="3"  label="威客名称">
+                {{ detail?.name }}
+            </ElDescriptionsItem>
+            <ElDescriptionsItem :span="3"  label="接单状态">
+                <ElTag :type="getStatus(detail?.status!).type">{{getStatus(detail?.status!).text}}</ElTag>
+            </ElDescriptionsItem>
             <ElDescriptionsItem :span="3"  label="所属游戏">
                 <ElTag type="primary">{{detail?.game}}</ElTag>
             </ElDescriptionsItem>
@@ -55,9 +61,8 @@
 
 <script setup lang="ts">
 import { fetchGetWitkeyDetail } from '@/api/witkey';
-import { SexType } from '@/enums/typeEnum';
+import { Status } from '@/enums/statusEnum';
 import { useSiteStore } from '@/store/modules/site';
-import { codeToText } from 'element-china-area-data';
 import { ElRate } from 'element-plus';
 
 interface Props {
@@ -65,7 +70,19 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+    const STATUS = {
+  [Status.Disable]: { type: 'danger' as const, text: '禁用' },
+  [Status.Enable]: { type: 'success' as const, text: '启用' },
+} as const
 
+const getStatus = (status: number) => {
+  return (
+    STATUS[status as keyof typeof STATUS] || {
+      type: 'info' as const,
+      text: '未知'
+    }
+  )
+}
 const {getInfo:site} = useSiteStore()
 const detail = ref<Witkey.Response.Detail>()
 const loading = ref<boolean>(false)

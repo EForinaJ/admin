@@ -54,6 +54,7 @@ const {
                     const label: Record<number, string> = {
                         [ChangeCommissionType.WitkeyChangeBalanceTypeSystem]: '系统变更佣金',
                         [ChangeCommissionType.WitkeyChangeBalanceTypeSettlement]: '报单结算',
+                        [ChangeCommissionType.WitkeyChangeBalanceTypeWithdraw]: '佣金提现',
                     };
                     return h(ElTag, { 
                         type: "primary"

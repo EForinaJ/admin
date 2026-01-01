@@ -6,7 +6,8 @@ declare namespace Witkey {
             Api.Common.CommonSearchParams
         >
         interface Model {
-            id?: number | null,
+            id?: number | nulll
+            name: string| null;
             titleId: number | null;
             gameId: number| null;
             userId: number| null;
@@ -14,6 +15,11 @@ declare namespace Witkey {
             rate: number;
         }
 
+        interface ChangeTitle {
+            id: number | null;
+            titleId: number | null;
+            gameId: number| null;
+        }
         interface ChangeCommission {
             id?: number | null,
             mode: number | null;
@@ -30,10 +36,12 @@ declare namespace Witkey {
                 avatar:string;
                 phone:string;
             };
+            name: string;
             game: string;
             title: string;
             commission: number;
             rate: number;
+            status: number;
             createTime: string;
         }
         type List = Api.Common.PaginatedResponse<Info>
@@ -54,11 +62,13 @@ declare namespace Witkey {
                 avatar:string;
                 phone:string;
             };
+            name: string;
             game: string;
             title: string;
             commission: number;
             rate: number;
             album: string[];
+            status: number;
             createTime: string;
         }
 

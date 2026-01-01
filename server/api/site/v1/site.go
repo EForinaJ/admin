@@ -16,7 +16,7 @@ type GetSiteRes struct {
 
 type GetUserOptionsReq struct {
 	g.Meta `path:"/site/user/options" method:"get" tags:"站点" summary:"所属用户选项"`
-	Name   string `p:"name" v:"required#请输入用户昵称" dc:"用户昵称"`
+	Phone  string `p:"phone" v:"required#请输入用户手机号" dc:"手机号"`
 }
 type GetUserOptionsRes struct {
 	List []*dao_site.Options `json:"list" dc:"所属用户选项列表"`

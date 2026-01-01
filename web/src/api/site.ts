@@ -7,7 +7,7 @@ export function fetchSite() {
 }
 
 // 获取所属用户选项列表
-export function fetchGetUserOptionsList(params: {name:string}) {
+export function fetchGetUserOptionsList(params: {phone:string}) {
   return request.get<{
     list: {
       id:number,

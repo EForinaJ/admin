@@ -29,7 +29,7 @@ func (s *sUpload) MiniFile(ctx context.Context, file *ghttp.UploadFile) (res []s
 	fjson := gjson.New(fileConfig)
 	path := fjson.Get("path").String()
 
-	filePath := "./public/" + path + "/" + gtime.Date()
+	filePath := ".././public/" + path + "/" + gtime.Date()
 	orName := file.Filename
 	name := strings.ToLower(strconv.FormatInt(gtime.TimestampNano(), 36) + grand.S(6))
 	file.Filename = name + gfile.Ext(file.Filename)

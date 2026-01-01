@@ -31,7 +31,7 @@ func (s *sWitkey) Delete(ctx context.Context, ids []int64) (err error) {
 		return utils_error.Err(response.DELETE_FAILED, response.CodeMsg(response.DELETE_FAILED))
 	}
 
-	_, err = tx.Model(dao.SysOrder.Table()).
+	_, err = tx.Model(dao.SysWitkey.Table()).
 		WhereIn(dao.SysWitkey.Columns().Id, ids).
 		Delete()
 	if err != nil {

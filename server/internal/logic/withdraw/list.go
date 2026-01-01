@@ -56,19 +56,14 @@ func (s *sWithdraw) GetList(ctx context.Context, req *dto_withdraw.Query) (total
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
 
-		userId, err := dao.SysWitkey.Ctx(ctx).
+		witkey, err := dao.SysWitkey.Ctx(ctx).
 			Where(dao.SysWitkey.Columns().Id, v.WitkeyId).
-			Value(dao.SysWitkey.Columns().UserId)
+			Value(dao.SysWitkey.Columns().Name)
 		if err != nil {
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
-		user, err := dao.SysUser.Ctx(ctx).
-			Where(dao.SysUser.Columns().Id, userId).
-			Value(dao.SysUser.Columns().Name)
-		if err != nil {
-			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-		}
-		entity.Witkey = user.String()
+		entity.Witkey = witkey.String()
+
 		res[i] = entity
 	}
 

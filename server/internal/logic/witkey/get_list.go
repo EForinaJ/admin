@@ -21,12 +21,7 @@ func (s *sWitkey) GetList(ctx context.Context, req *dto_witkey.Query) (total int
 		m = m.WhereIn(dao.SysWitkey.Columns().Id, req.Id)
 	}
 	if req.Name != "" {
-		user, err := dao.SysUser.Ctx(ctx).
-			WhereLike(dao.SysUser.Columns().Name, "%"+req.Name+"%").Value(dao.SysUser.Columns().Id)
-		if err != nil {
-			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-		}
-		m = m.Where(dao.SysWitkey.Columns().UserId, user.Int64())
+		m = m.Where(dao.SysWitkey.Columns().Name, req.Name)
 	}
 	if req.Phone != "" {
 		user, err := dao.SysUser.Ctx(ctx).Where(dao.SysUser.Columns().Phone, req.Phone).

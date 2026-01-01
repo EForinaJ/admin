@@ -27,8 +27,6 @@ type SysUser struct {
 	Cover       interface{} //
 	Experience  interface{} //
 	Balance     interface{} // 余额
-	Commission  interface{} //
-	Deposit     interface{} //
 	Description interface{} //
 	Status      interface{} // 帐号状态（1停用,2正常）
 	CreateTime  *gtime.Time // 创建时间

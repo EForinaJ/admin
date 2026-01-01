@@ -70,19 +70,12 @@ func (s *sSettlement) GetList(ctx context.Context, req *dto_settlement.Query) (t
 		//  威客
 		witkey, err := dao.SysWitkey.Ctx(ctx).
 			Where(dao.SysWitkey.Columns().Id, v.WitkeyId).
-			Fields(dao.SysWitkey.Columns().UserId, dao.SysWitkey.Columns().TitleId, dao.SysWitkey.Columns().GameId).
+			Fields(dao.SysWitkey.Columns().Name, dao.SysWitkey.Columns().TitleId, dao.SysWitkey.Columns().GameId).
 			One()
 		if err != nil {
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
-		user, err := dao.SysUser.Ctx(ctx).
-			Where(dao.SysUser.Columns().Id,
-				witkey.GMap().Get(dao.SysWitkey.Columns().UserId)).
-			Value(dao.SysUser.Columns().Name)
-		if err != nil {
-			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-		}
-		entity.Witkey = user.String()
+		entity.Witkey = gconv.String(witkey.GMap().Get(dao.SysWitkey.Columns().Name))
 
 		res[i] = entity
 	}

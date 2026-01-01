@@ -35,8 +35,6 @@ type SysUserColumns struct {
 	Cover       string //
 	Experience  string //
 	Balance     string // 余额
-	Commission  string //
-	Deposit     string //
 	Description string //
 	Status      string // 帐号状态（1停用,2正常）
 	CreateTime  string // 创建时间
@@ -62,8 +60,6 @@ var sysUserColumns = SysUserColumns{
 	Cover:       "cover",
 	Experience:  "experience",
 	Balance:     "balance",
-	Commission:  "commission",
-	Deposit:     "deposit",
 	Description: "description",
 	Status:      "status",
 	CreateTime:  "create_time",

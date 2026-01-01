@@ -58,10 +58,10 @@ import { UserStatus } from '@/enums/statusEnum';
   // 表单配置
   const formItems = computed(() => [
     {
-      label: '用户名',
+      label: '威客名称',
       key: 'name',
       type: 'input',
-      placeholder: '请输入用户名',
+      placeholder: '请输入威客名称',
       clearable: true
     },
     {

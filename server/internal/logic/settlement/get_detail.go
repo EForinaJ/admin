@@ -38,19 +38,13 @@ func (s *sSettlement) GetDetail(ctx context.Context, id int64) (res *dao_settlem
 	//  威客
 	witkey, err := dao.SysWitkey.Ctx(ctx).
 		Where(dao.SysWitkey.Columns().Id, obj.GMap().Get(dao.SysSettlement.Columns().WitkeyId)).
-		Fields(dao.SysWitkey.Columns().UserId, dao.SysWitkey.Columns().TitleId, dao.SysWitkey.Columns().GameId).
+		Fields(dao.SysWitkey.Columns().Name, dao.SysWitkey.Columns().TitleId, dao.SysWitkey.Columns().GameId).
 		One()
 	if err != nil {
 		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
-	user, err := dao.SysUser.Ctx(ctx).
-		Where(dao.SysUser.Columns().Id,
-			witkey.GMap().Get(dao.SysWitkey.Columns().UserId)).
-		Value(dao.SysUser.Columns().Name)
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
-	detail.Witkey = user.String()
+
+	detail.Witkey = gconv.String(witkey.GMap().Get(dao.SysWitkey.Columns().Name))
 
 	manage, err := dao.SysManage.Ctx(ctx).
 		Where(dao.SysManage.Columns().Id,

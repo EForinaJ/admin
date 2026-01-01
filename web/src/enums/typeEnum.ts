@@ -12,6 +12,7 @@ export enum ChangeBalanceType {
 export enum ChangeCommissionType {
   WitkeyChangeBalanceTypeSystem = 1,      // 系统变更
   WitkeyChangeBalanceTypeSettlement = 2,      // 报单结算
+  WitkeyChangeBalanceTypeWithdraw  = 3,      // 提现佣金
 }
 
 export enum OrderLogType {

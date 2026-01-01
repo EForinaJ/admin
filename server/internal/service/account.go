@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	dao_account "server/internal/type/account/dao"
+	dto_account "server/internal/type/account/dto"
 )
 
 // 定义显示接口
@@ -11,6 +12,9 @@ type IAccount interface {
 	GetDetail(ctx context.Context) (res *dao_account.Detail, err error)
 	// 账户菜单
 	GetMenus(ctx context.Context) (res []*dao_account.Menu, err error)
+	Edit(ctx context.Context, req *dto_account.Edit) (err error)
+	ChangePass(ctx context.Context, req *dto_account.ChangePass) (err error)
+	CheckPass(ctx context.Context, req *dto_account.ChangePass) (err error)
 }
 
 // 定义接口变量

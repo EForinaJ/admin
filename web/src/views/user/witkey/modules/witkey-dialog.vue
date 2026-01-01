@@ -1,14 +1,33 @@
 <template>
   <ElDialog
     v-model="visible"
-    :title="drawerType === 'create' ? '添加威客' : '编辑威客'"
+    title="添加威客"
     width="30%"
     align-center
     @close="handleClose"
   >
     <ElForm v-loading="loading" ref="formRef" :model="formData" :rules="rules" label-width="80px">
+      <ElFormItem label="威客昵称" prop="name">
+        <ElInput  v-model="formData.name" placeholder="请输入威客昵称" />
+      </ElFormItem>
       <ElFormItem label="所属用户" prop="userId">
-        <ElInput :disabled="drawerType != 'create'" v-model="formData.userId" placeholder="请输入所属用户ID" />
+          <ElSelect
+              v-model="formData.userId"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入用户手机号"
+              :remote-method="remoteMethod"
+              :loading="loading"
+        
+          >
+              <ElOption
+                  v-for="item in userOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              />
+          </ElSelect>
       </ElFormItem>
       <ElFormItem label="所属游戏" prop="gameId">
         <ElSelect
@@ -78,19 +97,16 @@
 </template>
 
 <script setup lang="ts">
-import { fetchGetGameOptionsList, fetchGetTitleOptionsList } from '@/api/site';
-import { fetchGetWitkeyEdit, fetchPostWitkeyCreate, fetchPostWitkeyEdit } from '@/api/witkey';
+import { fetchGetGameOptionsList, fetchGetTitleOptionsList, fetchGetUserOptionsList } from '@/api/site';
+import { fetchPostWitkeyCreate } from '@/api/witkey';
 import type { FormInstance, FormRules  } from 'element-plus'
-
+import { useDebounce } from '@/hooks/index';
 
 interface Props {
   modelValue: boolean
-  type: "create" | "edit"
-  id?: number | null
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
-  type: 'create',
   id: 0
 })
 interface Emits {
@@ -106,32 +122,18 @@ const visible = computed({
     set: (value) => emit('update:modelValue', value)
 })
 
-const drawerType = computed(() => props.type)
-
 interface ListItem {
   value: number
   label: string
 }
 
-
-
-
-
-
-
 // 表单实例
 const formRef = ref<FormInstance>()
-interface model {
-  id?: number | null,
-  titleId: number | null;
-  gameId: number| null;
-  userId: number| null;
-  album: string[];
-  rate: number;
-}
+
 // 表单数据
-const formData = reactive<model>({
+const formData = reactive<Witkey.Params.Model>({
   id: 0,
+  name: null,
   titleId: null,
   gameId: null,
   userId: null,
@@ -141,6 +143,9 @@ const formData = reactive<model>({
 
 // 表单验证规则
 const rules: FormRules = {
+  name: [
+    { required: true, message: '请输入威客昵称', trigger: 'blur' },
+  ],
   userId: [
     { required: true, message: '请选择所属用户', trigger: 'blur' },
   ],
@@ -159,9 +164,37 @@ const handleAlbum = (e:string) => {
 const deleteAlbum = (i:number) => {
   formData.album.splice(i,1)
 }
-
-
+const { debounce } = useDebounce()
 const loading = ref(false)
+const userOptions = ref<ListItem[]>([])
+const getUserOptions =  async (phone:string) => {
+  try {
+      const res = await fetchGetUserOptionsList({phone})
+      userOptions.value = res.list.map((item) => {
+          return {
+              value: item.id,
+              label: item.name
+          }
+      })
+  } finally {
+      loading.value = false
+  }
+}
+
+// 创建防抖版本
+const getUserOptionsDebounced = debounce((query: string) => {
+loading.value = true
+getUserOptions(query)
+}, 500)
+const remoteMethod = (query: string) => {
+  if (query) {
+    getUserOptionsDebounced(query)
+  } else {
+    userOptions.value = []
+  }
+}
+
+
 const gameOptions = ref<ListItem[]>([])
 const getGameOptions =  async () => {
   const res = await fetchGetGameOptionsList()
@@ -195,21 +228,14 @@ const getTitleOptions = async (id:number) => {
 const initFormData = async () => {
   loading.value = true 
   await getGameOptions()
-  if (props.type === 'create') {
-    Object.assign(formData, {
-      id: 0,
-      titleId: null,
-      gameId: null,
-      userId: null,
-      album: [],
-      rate: 0,
-    })
-  }
-  if (props.type === 'edit') {
-    const res = await fetchGetWitkeyEdit({id:props.id!})
-    await getTitleOptions(res.gameId!)
-    Object.assign(formData, res)
-  }
+  Object.assign(formData, {
+    name: null,
+    titleId: null,
+    gameId: null,
+    userId: null,
+    album: [],
+    rate: 0,
+  })
   loading.value = false 
 }
 /**
@@ -238,15 +264,8 @@ const handleSubmit = async () => {
   if (!formRef.value) return
   await formRef.value.validate(async (valid) => {
     if (valid) {
-      if (drawerType.value === 'create') {
-        await fetchPostWitkeyCreate(formData)
-      }
-
-      if (drawerType.value === 'edit') {
-        await fetchPostWitkeyEdit(formData)
-      }
-
-      ElMessage.success(drawerType.value === 'create' ? '添加成功' : '更新成功')
+      await fetchPostWitkeyCreate(formData)
+      ElMessage.success('添加成功')
       emit('submit')
       handleClose()
     }

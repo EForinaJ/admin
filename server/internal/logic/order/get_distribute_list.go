@@ -50,19 +50,12 @@ func (s *sOrder) GetDistributeList(ctx context.Context, req *dto_order.Distribut
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
 		witkey, err := dao.SysWitkey.Ctx(ctx).Where(dao.SysWitkey.Columns().Id, v.WitkeyId).
-			Fields(dao.SysWitkey.Columns().UserId, dao.SysWitkey.Columns().TitleId, dao.SysWitkey.Columns().GameId).One()
+			Fields(dao.SysWitkey.Columns().Name, dao.SysWitkey.Columns().TitleId, dao.SysWitkey.Columns().GameId).One()
 		if err != nil {
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
 
-		//  下单用户
-		user, err := dao.SysUser.Ctx(ctx).
-			Where(dao.SysUser.Columns().Id, witkey.GMap().Get(dao.SysWitkey.Columns().UserId)).
-			Value(dao.SysUser.Columns().Name)
-		if err != nil {
-			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-		}
-		entity.Witkey = user.String()
+		entity.Witkey = gconv.String(witkey.GMap().Get(dao.SysWitkey.Columns().Name))
 
 		game, err := dao.SysGame.Ctx(ctx).
 			Where(dao.SysGame.Columns().Id,

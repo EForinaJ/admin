@@ -57,10 +57,10 @@ func (s *sWithdraw) Apply(ctx context.Context, req *dto_withdraw.Apply) (err err
 			return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
 		newCommission := decimal.NewFromFloat(commission.Float64()).Sub(amount)
-		_, err = tx.Model(dao.SysUser.Table()).
-			Where(dao.SysUser.Columns().Id, withdraw.GMap().Get(dao.SysWithdraw.Columns().WitkeyId)).
+		_, err = tx.Model(dao.SysWitkey.Table()).
+			Where(dao.SysWitkey.Columns().Id, withdraw.GMap().Get(dao.SysWithdraw.Columns().WitkeyId)).
 			Data(g.Map{
-				dao.SysUser.Columns().Commission: newCommission,
+				dao.SysWitkey.Columns().Commission: newCommission,
 			}).Update()
 		if err != nil {
 			return utils_error.Err(response.UPDATE_FAILED, response.CodeMsg(response.UPDATE_FAILED))

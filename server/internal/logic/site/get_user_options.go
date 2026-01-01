@@ -10,19 +10,12 @@ import (
 )
 
 // GetUserOptions implements service.ISite.
-func (s *sSite) GetUserOptions(ctx context.Context, name string) (res []*dao_site.Options, err error) {
+func (s *sSite) GetUserOptions(ctx context.Context, phone string) (res []*dao_site.Options, err error) {
 	m := dao.SysUser.Ctx(ctx).
 		Page(1, 5).
 		OrderDesc(dao.SysUser.Columns().CreateTime).
 		Fields(dao.SysUser.Columns().Id, dao.SysUser.Columns().Name)
-
-	userId, err := dao.SysUser.Ctx(ctx).
-		WhereLike(dao.SysUser.Columns().Name, "%"+name+"%").
-		Value(dao.SysUser.Columns().Id)
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
-	m = m.Where(dao.SysUser.Columns().Id, userId)
+	m = m.Where(dao.SysUser.Columns().Phone, phone)
 
 	var list []*entity.SysUser
 	err = m.Scan(&list)

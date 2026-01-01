@@ -163,6 +163,7 @@ const initFormData = async () => {
       pic: "",
       gameId: null,
       description: null,
+      servicePercent: null,
     })
   }
   if (props.type === 'edit') {

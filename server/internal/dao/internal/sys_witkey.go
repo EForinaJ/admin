@@ -21,6 +21,7 @@ type SysWitkeyDao struct {
 // SysWitkeyColumns defines and stores column names for the table sys_witkey.
 type SysWitkeyColumns struct {
 	Id          string // 用户ID
+	Name        string //
 	UserId      string //
 	TitleId     string //
 	GameId      string //
@@ -36,6 +37,7 @@ type SysWitkeyColumns struct {
 // sysWitkeyColumns holds the columns for the table sys_witkey.
 var sysWitkeyColumns = SysWitkeyColumns{
 	Id:          "id",
+	Name:        "name",
 	UserId:      "user_id",
 	TitleId:     "title_id",
 	GameId:      "game_id",
