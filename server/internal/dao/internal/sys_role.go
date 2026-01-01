@@ -24,7 +24,7 @@ type SysRoleColumns struct {
 	Name        string // 角色名称
 	Code        string //
 	Description string //
-	Status      string // 角色状态（2正常 1停用）
+	Type        string //
 	CreateTime  string // 创建时间
 	UpdateTime  string // 更新时间
 	Remark      string // 备注
@@ -36,7 +36,7 @@ var sysRoleColumns = SysRoleColumns{
 	Name:        "name",
 	Code:        "code",
 	Description: "description",
-	Status:      "status",
+	Type:        "type",
 	CreateTime:  "create_time",
 	UpdateTime:  "update_time",
 	Remark:      "remark",

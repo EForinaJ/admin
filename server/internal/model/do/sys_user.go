@@ -29,6 +29,8 @@ type SysUser struct {
 	Balance     interface{} // 余额
 	Description interface{} //
 	Status      interface{} // 帐号状态（1停用,2正常）
+	LoginIp     interface{} //
+	LoginTime   *gtime.Time //
 	CreateTime  *gtime.Time // 创建时间
 	UpdateTime  *gtime.Time // 更新时间
 	DeleteTime  *gtime.Time // 软删除

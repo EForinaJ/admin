@@ -9,8 +9,8 @@ declare namespace Role {
             id?: number; // 权限ID
             name: string;
             code: string;
+            type: number;
             description: string;
-            status: number;
         }
     }
     namespace Response {
@@ -20,7 +20,7 @@ declare namespace Role {
             name: string;
             code: string;
             description: string;
-            status: number;
+            type: number;
             createTime: string;
         }
 
@@ -30,8 +30,8 @@ declare namespace Role {
             id: number;
             name: string;
             code: string;
+            type: number;
             description: string;
-            status: number;
         }
     }
 }

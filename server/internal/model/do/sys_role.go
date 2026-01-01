@@ -16,7 +16,7 @@ type SysRole struct {
 	Name        interface{} // 角色名称
 	Code        interface{} //
 	Description interface{} //
-	Status      interface{} // 角色状态（2正常 1停用）
+	Type        interface{} //
 	CreateTime  *gtime.Time // 创建时间
 	UpdateTime  *gtime.Time // 更新时间
 	Remark      interface{} // 备注

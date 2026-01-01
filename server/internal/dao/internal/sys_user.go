@@ -37,6 +37,8 @@ type SysUserColumns struct {
 	Balance     string // 余额
 	Description string //
 	Status      string // 帐号状态（1停用,2正常）
+	LoginIp     string //
+	LoginTime   string //
 	CreateTime  string // 创建时间
 	UpdateTime  string // 更新时间
 	DeleteTime  string // 软删除
@@ -62,6 +64,8 @@ var sysUserColumns = SysUserColumns{
 	Balance:     "balance",
 	Description: "description",
 	Status:      "status",
+	LoginIp:     "login_ip",
+	LoginTime:   "login_time",
 	CreateTime:  "create_time",
 	UpdateTime:  "update_time",
 	DeleteTime:  "delete_time",

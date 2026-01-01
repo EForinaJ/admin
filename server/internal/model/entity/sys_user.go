@@ -27,6 +27,8 @@ type SysUser struct {
 	Balance     float64     `json:"balance"     orm:"balance"     description:"余额"`              // 余额
 	Description string      `json:"description" orm:"description" description:""`                //
 	Status      int         `json:"status"      orm:"status"      description:"帐号状态（1停用,2正常）"`   // 帐号状态（1停用,2正常）
+	LoginIp     string      `json:"loginIp"     orm:"login_ip"    description:""`                //
+	LoginTime   *gtime.Time `json:"loginTime"   orm:"login_time"  description:""`                //
 	CreateTime  *gtime.Time `json:"createTime"  orm:"create_time" description:"创建时间"`            // 创建时间
 	UpdateTime  *gtime.Time `json:"updateTime"  orm:"update_time" description:"更新时间"`            // 更新时间
 	DeleteTime  *gtime.Time `json:"deleteTime"  orm:"delete_time" description:"软删除"`             // 软删除

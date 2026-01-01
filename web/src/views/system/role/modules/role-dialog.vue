@@ -13,6 +13,12 @@
       <ElFormItem label="角色编码" prop="code">
         <ElInput v-model="form.code" placeholder="请输入角色编码" />
       </ElFormItem>
+      <ElFormItem label="角色类型" prop="type">
+        <ElSelect v-model="form.type">
+          <ElOption label="超管" :value="RoleType.Super" />
+          <ElOption label="客服" :value="RoleType.Kefu" />
+        </ElSelect>
+      </ElFormItem>
       <ElFormItem label="描述" prop="description">
         <ElInput
           v-model="form.description"
@@ -20,12 +26,6 @@
           :rows="3"
           placeholder="请输入角色描述"
         />
-      </ElFormItem>
-      <ElFormItem label="角色状态">
-        <ElRadioGroup v-model="form.status">
-          <ElRadio :value="1">禁用</ElRadio>
-          <ElRadio :value="2">启用</ElRadio>
-        </ElRadioGroup>
       </ElFormItem>
     </ElForm>
     <template #footer>
@@ -37,6 +37,7 @@
 
 <script setup lang="ts">
   import { fetchRoleCreate, fetchRoleEdit, fetchRoleGetEdit } from '@/api/role';
+import { RoleType } from '@/enums/typeEnum';
 import type { FormInstance, FormRules } from 'element-plus'
 
 
@@ -81,17 +82,20 @@ import type { FormInstance, FormRules } from 'element-plus'
       { required: true, message: '请输入角色编码', trigger: 'blur' },
       { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
     ],
+    type: [
+      { required: true, message: '请选择角色类型', trigger: 'blur' },
+    ],
   })
 
   /**
    * 表单数据
    */
-  const form = reactive<Role.Params.Create>({
+  const form = reactive<Role.Params.Model>({
     id: 0,
     name: '',
     code: '',
+    type: RoleType.Kefu,
     description: '',
-    status: 0
   })
 
   /**
@@ -117,9 +121,10 @@ import type { FormInstance, FormRules } from 'element-plus'
         id: 0,
         name: '',
         code: '',
+        type: RoleType.Kefu,
         description: '',
         createTime: '',
-        status: 2
+
       })
     }
   }

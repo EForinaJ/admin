@@ -22,6 +22,8 @@ type SysManage struct {
 	Salt        string      `json:"salt"        orm:"salt"        description:"密码盐"`           // 密码盐
 	Status      int         `json:"status"      orm:"status"      description:"帐号状态（1停用,2正常）"` // 帐号状态（1停用,2正常）
 	Description string      `json:"description" orm:"description" description:""`              //
+	LoginIp     string      `json:"loginIp"     orm:"login_ip"    description:""`              //
+	LoginTime   *gtime.Time `json:"loginTime"   orm:"login_time"  description:""`              //
 	CreateTime  *gtime.Time `json:"createTime"  orm:"create_time" description:"创建时间"`          // 创建时间
 	UpdateTime  *gtime.Time `json:"updateTime"  orm:"update_time" description:"更新时间"`          // 更新时间
 	Remark      string      `json:"remark"      orm:"remark"      description:"备注"`            // 备注

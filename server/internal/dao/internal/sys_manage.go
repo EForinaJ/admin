@@ -32,6 +32,8 @@ type SysManageColumns struct {
 	Salt        string // 密码盐
 	Status      string // 帐号状态（1停用,2正常）
 	Description string //
+	LoginIp     string //
+	LoginTime   string //
 	CreateTime  string // 创建时间
 	UpdateTime  string // 更新时间
 	Remark      string // 备注
@@ -52,6 +54,8 @@ var sysManageColumns = SysManageColumns{
 	Salt:        "salt",
 	Status:      "status",
 	Description: "description",
+	LoginIp:     "login_ip",
+	LoginTime:   "login_time",
 	CreateTime:  "create_time",
 	UpdateTime:  "update_time",
 	Remark:      "remark",

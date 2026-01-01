@@ -71,6 +71,8 @@ import RolePermissionDialog from './modules/role-permission-dialog.vue'
 import { ElTag, ElMessageBox } from 'element-plus'
 import { fetchRoleDelete, fetchRoleList } from '@/api/role'
 import RoleMenuDialog from './modules/role-menu-dialog.vue'
+import { Status } from '@/enums/statusEnum'
+import { RoleType } from '@/enums/typeEnum'
 
   defineOptions({ name: 'Role' })
 
@@ -87,6 +89,20 @@ import RoleMenuDialog from './modules/role-menu-dialog.vue'
   const menuDialog = ref(false)
   const id = ref<number | null>(null)
 
+
+  const ROLE_TYPE = {
+    [RoleType.Super]: { type: 'primary' as const, text: '超管' },
+    [RoleType.Kefu]: { type: 'primary' as const, text: '客服' },
+  } as const
+
+  const getType = (type: number) => {
+    return (
+      ROLE_TYPE[type as keyof typeof ROLE_TYPE] || {
+        type: 'info' as const,
+        text: '未知'
+      }
+    )
+  }
   const {
     columns,
     columnChecks,
@@ -135,24 +151,15 @@ import RoleMenuDialog from './modules/role-menu-dialog.vue'
           showOverflowTooltip: true
         },
         {
-          prop: 'status',
-          label: '角色状态',
+          prop: 'type',
+          label: '角色类型',
           width: 100,
           formatter: (row) => {
-
-            const tagMap: Record<number, string> = {
-              1: 'warning',
-              2: 'success'
-            };
-
-            const label: Record<number, string> = {
-              1: '禁用',
-              2: '启用'
-            };
+            const status =  getType(row.type)
             return h(
               ElTag,
-              { type: tagMap[row.status] as 'success' | 'warning' },
-              () => label[row.status]
+              { type: status.type },
+              () => status.text
             )
           }
         },

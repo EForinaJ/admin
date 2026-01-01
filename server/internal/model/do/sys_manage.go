@@ -24,6 +24,8 @@ type SysManage struct {
 	Salt        interface{} // 密码盐
 	Status      interface{} // 帐号状态（1停用,2正常）
 	Description interface{} //
+	LoginIp     interface{} //
+	LoginTime   *gtime.Time //
 	CreateTime  *gtime.Time // 创建时间
 	UpdateTime  *gtime.Time // 更新时间
 	Remark      interface{} // 备注

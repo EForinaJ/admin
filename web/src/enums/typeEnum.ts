@@ -1,3 +1,9 @@
+
+export enum RoleType {
+  Super = 1, // 超管
+  Kefu = 2, // 客服
+}
+
 export enum SexType {
   Male = 1,      // 男
   Female = 2,    // 女

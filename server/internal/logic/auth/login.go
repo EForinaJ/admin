@@ -12,6 +12,7 @@ import (
 	"server/internal/utils/response"
 	"strings"
 
+	"github.com/gogf/gf/v2/container/garray"
 	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
@@ -39,7 +40,11 @@ func (s *sAtuh) Login(ctx context.Context, req *dto_auth.Login) (res interface{}
 	userObj.Struct(&user)
 	randPwd := consts.SYSTEMNAME + req.PassWord + user.Salt
 	randPwd = gmd5.MustEncryptString(randPwd)
-
+	token, err := jwt.GenToken(user.Id, user.Name)
+	if err != nil {
+		return "", utils_error.Err(response.LOGIN_ERROR, response.CodeMsg(response.LOGIN_ERROR))
+	}
+	res = token
 	if !strings.EqualFold(user.Password, randPwd) {
 		// 设置密码错误次数
 		errTimes, _ := utlis_lock.SetCount(ctx, consts.LoginCount+req.Phone,
@@ -55,14 +60,37 @@ func (s *sAtuh) Login(ctx context.Context, req *dto_auth.Login) (res interface{}
 			return nil, utils_error.Err(response.LOGIN_ERROR, "密码不正确"+",还有"+gconv.String(having)+"次之后账号将锁定")
 		}
 	} else {
-		_, err = dao.SysManageLoginLog.Ctx(ctx).Data(g.Map{
-			dao.SysManageLoginLog.Columns().Ip:         g.RequestFromCtx(ctx).GetClientIp(),
-			dao.SysManageLoginLog.Columns().CreateTime: gtime.Now(),
-			dao.SysManageLoginLog.Columns().ManageId:   user.Id,
-		}).Insert()
+
+		// 判断是否是超管
+		roleIds, err := dao.SysManageRole.Ctx(ctx).
+			Where(dao.SysManageRole.Columns().ManageId, user.Id).
+			Fields(dao.SysManageRole.Columns().RoleId).
+			Array()
 		if err != nil {
 			return "", utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
+
+		roleTypes, err := dao.SysRole.Ctx(ctx).
+			WhereIn(dao.SysRole.Columns().Id, roleIds).
+			Fields(dao.SysRole.Columns().Type).
+			Array()
+		if err != nil {
+			return "", utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
+		}
+		if !garray.NewIntArrayFrom(roleTypes.Ints()).Contains(consts.RoleTypeSuper) {
+			return "", utils_error.Err(response.LOGIN_ERROR, "该职员不是超管，无法登录")
+		}
+
+		_, err = dao.SysManage.Ctx(ctx).
+			Where(dao.SysManage.Columns().Id, user.Id).
+			Data(g.Map{
+				dao.SysManage.Columns().LoginIp:   g.RequestFromCtx(ctx).GetClientIp(),
+				dao.SysManage.Columns().LoginTime: gtime.Now(),
+			}).Update()
+		if err != nil {
+			return "", utils_error.Err(response.UPDATE_FAILED, response.CodeMsg(response.UPDATE_FAILED))
+		}
+
 		token, err := jwt.GenToken(user.Id, user.Name)
 		if err != nil {
 			return "", utils_error.Err(response.LOGIN_ERROR, response.CodeMsg(response.LOGIN_ERROR))

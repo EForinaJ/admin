@@ -1,6 +1,10 @@
 package consts
 
 const (
+	RoleTypeSuper = 1 // 超管
+)
+
+const (
 	ProfitTypeOrder = 1 // 订单收益
 )
 
