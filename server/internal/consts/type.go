@@ -34,3 +34,16 @@ const (
 	ExperienceTypeCheckIn = 1 // 签到经验
 	ExperienceTypePayment = 2 // 下单购买
 )
+
+const (
+	OrderLogTypeCreate           = 1  // 创建订单
+	OrderLogTypeAddDiscount      = 2  // 添加优惠金额
+	OrderLogTypeCancel           = 3  // 关闭订单
+	OrderLogTypeComplete         = 4  // 完成订单
+	OrderLogTypePaid             = 5  // 确认收款订单
+	OrderLogTypeAfterSales       = 6  // 添加售后工单
+	OrderLogTypeDistribute       = 7  // 派发威客
+	OrderLogTypeDistributeCancel = 8  // 取消派单服务
+	OrderLogTypeStart            = 9  // 开始服务
+	OrderLogTypeRefund           = 10 // 订单手动退款
+)

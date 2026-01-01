@@ -12,3 +12,10 @@ export function fetchGetAftersalesDetail(params: {id:number}) {
     params
   })
 }
+
+export function fetchPostAftersalesApply(data: Aftersales.Params.Apply) {
+  return request.post({
+    url: '/aftersales/apply',
+    data
+  })
+}

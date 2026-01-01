@@ -28,6 +28,7 @@ type SysWitkeyColumns struct {
 	Rate        string //
 	Commission  string //
 	Description string //
+	Status      string //
 	CreateTime  string // 创建时间
 	UpdateTime  string // 更新时间
 }
@@ -42,6 +43,7 @@ var sysWitkeyColumns = SysWitkeyColumns{
 	Rate:        "rate",
 	Commission:  "commission",
 	Description: "description",
+	Status:      "status",
 	CreateTime:  "create_time",
 	UpdateTime:  "update_time",
 }

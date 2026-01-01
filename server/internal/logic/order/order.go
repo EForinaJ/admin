@@ -1,6 +1,8 @@
 package order
 
-import "server/internal/service"
+import (
+	"server/internal/service"
+)
 
 type sOrder struct{}
 

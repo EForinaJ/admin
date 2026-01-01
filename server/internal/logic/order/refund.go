@@ -87,5 +87,17 @@ func (s *sOrder) Refund(ctx context.Context, req *dto_order.Refund) (err error) 
 		return utils_error.Err(response.ADD_FAILED, response.CodeMsg(response.ADD_FAILED))
 	}
 
+	//  添加订单日志
+	_, err = tx.Model(dao.SysOrderLog.Table()).Data(g.Map{
+		dao.SysOrderLog.Columns().CreateTime: gtime.Now(),
+		dao.SysOrderLog.Columns().Content:    "订单手动退款",
+		dao.SysOrderLog.Columns().ManageId:   ctx.Value("userId"),
+		dao.SysOrderLog.Columns().OrderId:    req.Id,
+		dao.SysOrderLog.Columns().Type:       consts.OrderLogTypeRefund,
+	}).Insert()
+	if err != nil {
+		return utils_error.Err(response.ADD_FAILED, response.CodeMsg(response.ADD_FAILED))
+	}
+
 	return
 }

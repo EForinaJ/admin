@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { useTable } from '@/hooks/core/useTable'
-import { ElTag, ElMessageBox, ElImage, ElRate, ElSpace } from 'element-plus'
+import { ElTag, ElMessageBox, ElImage, ElRate, ElSpace, ElPopconfirm } from 'element-plus'
 import { useSiteStore } from '@/store/modules/site'
 import { useAuth } from '@/hooks'
 import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
@@ -54,8 +54,6 @@ defineOptions({ name: 'Comment' })
 
 const {getInfo:site} = useSiteStore()
 // 弹窗相关
-
-const applyModalVisible = ref(false)
 const id = ref<number>(0)
 
 // 选中行
@@ -190,11 +188,22 @@ const {
         fixed: 'right', // 固定列
         formatter: (row) =>{
           return h('div', { class: 'comment flex-c' }, [
-            (hasAuth("apply") && h(ArtButtonTable, {
+            // (hasAuth("apply") && h(ArtButtonTable, {
+            //   type: 'view',
+            //   icon: 'solar:checklist-minimalistic-bold',
+            //   onClick: () => handleApply(row)
+            // })),
+            ((hasAuth("apply") && row.status == ApplyStatus.Pending) && h(ElPopconfirm, {
+              title: "评论是否通过审核",
+              confirmButtonText: '是',
+              cancelButtonText: '否',
+              onConfirm: () => handleApply({id:row.id,status:ApplyStatus.Success}),
+              onCancel: () => handleApply({id:row.id,status:ApplyStatus.Fail}),
+            },{reference: () =>h(ArtButtonTable, {
               type: 'view',
-              icon: 'solar:checklist-minimalistic-bold',
-              onClick: () => handleApply(row)
-            })),
+              icon: 'solar:checklist-minimalistic-bold'
+            })})),
+
             (hasAuth("delete") && h(ArtButtonTable, {
               type: 'delete',
               onClick: () => handleDelete(row)
@@ -229,28 +238,10 @@ const handleSearch = (params: Record<string, any>) => {
 
 
 
-const handleApply = (row:Comment.Response.Info) => {
-  ElMessageBox.confirm(`评论是否通过审核`, '评价审核', {
-    confirmButtonText: '通过',
-    cancelButtonText: '不通过',
-    type: 'error'
-  }).then(async() => {
+const handleApply = async (data:{id:number,status:number}) => {
     // TODO: 调用删除接口
-    ElMessage.success('通过审核')
-    await fetchPostCommentApply({
-      id:row.id,
-      status: 2
-    })
-    refreshData()
-  })
-  .catch(async () => {
-    ElMessage.info('驳回评论')
-    await fetchPostCommentApply({
-      id:row.id,
-      status: 3
-    })
-    refreshData()
-  })
+  await fetchPostCommentApply(data)
+  refreshData()
 }
 
 

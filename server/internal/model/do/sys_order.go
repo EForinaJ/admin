@@ -16,8 +16,6 @@ type SysOrder struct {
 	Code           interface{} //
 	UserId         interface{} //
 	ProductId      interface{} //
-	ManageId       interface{} //
-	Specifications interface{} //
 	WitkeyCount    interface{} //
 	Quantity       interface{} //
 	Unit           interface{} //

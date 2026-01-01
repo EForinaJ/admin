@@ -10,8 +10,8 @@ import (
 type IAftersales interface {
 	GetList(ctx context.Context, req *dto_aftersales.Query) (total int, res []*dao_aftersales.List, err error)
 	GetDetail(ctx context.Context, id int64) (res *dao_aftersales.Detail, err error)
-	// Apply(ctx context.Context, req *dto_aftersales.Apply) (err error)
-	// CheckApply(ctx context.Context, req *dto_aftersales.Apply) (err error)
+	Apply(ctx context.Context, req *dto_aftersales.Apply) (err error)
+	CheckApply(ctx context.Context, req *dto_aftersales.Apply) (err error)
 }
 
 // 定义接口变量

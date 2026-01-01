@@ -134,6 +134,9 @@
                     <ElTag :type="getAftersalesType(detail?.type!).type">{{ getAftersalesType(detail?.type!).text }}</ElTag>
                 </ElDescriptionsItem>
             </ElDescriptions>
+            <div v-if="detail?.status == ApplyStatus.Fail" class="bg-primary/10 text-sm p-2 rounded">
+                驳回原因:{{ detail?.reject }}
+            </div>
             <template #footer>
                 <div class="font-bold">
                     {{detail?.reason}}

@@ -39,17 +39,6 @@
         :id="id"
         @submit="refreshData"
       />
-
-      <OrderRefundModal
-        v-model:visible="refundModalVisible"
-        :id="id"
-        @submit="refreshData"
-      />
-      <OrderAddDiscountModal
-        v-model:visible="addDiscountModalVisible"
-        :id="id"
-        @submit="refreshData"
-      />
     </ElCard>
   </div>
 </template>
@@ -59,15 +48,10 @@ import { useTable } from '@/hooks/core/useTable'
 import { ElTag, ElMessageBox, ElImage } from 'element-plus'
 import { useSiteStore } from '@/store/modules/site'
 import { useAuth } from '@/hooks'
-import { ButtonMoreItem } from '@/components/core/forms/art-button-more/index.vue'
 import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
-import ArtButtonMore from '@/components/core/forms/art-button-more/index.vue'
-import { fetchGetOrderList, fetchPostOrderCancel, fetchPostOrderComplete, fetchPostOrderDelete, fetchPostOrderPaid, fetchPostOrderStart } from '@/api/order'
+import { fetchGetOrderList,  fetchPostOrderDelete } from '@/api/order'
 import { OrderStatus} from '@/enums/statusEnum'
-import OrderAddDiscountModal from './modules/order-add-discount-modal.vue'
-import { PayMode } from '@/enums/modeEnum'
 import OrderViewDrawer from './modules/order-view-drawer.vue'
-import OrderRefundModal from './modules/order-refund-modal.vue'
 import OrderSearch from './modules/order-search.vue'
 
 
@@ -79,9 +63,7 @@ const siteStore = useSiteStore()
 
 
 // 弹窗相关
-const refundModalVisible = ref(false)
 const viewDrawerVisible = ref(false)
-const addDiscountModalVisible = ref(false)
 const id = ref<number>(0)
 
 // 选中行
@@ -116,25 +98,6 @@ const getOrderStatusConfig = (status: number) => {
   )
 }
 
-// 支付状态配置
-const ORDER_PAY_MODE = {
-  [PayMode.AlyPay]: { type: 'primary' as const, text: '支付宝' },
-  [PayMode.Wechat]: { type: 'success' as const, text: '微信' },
-  [PayMode.Balance]: { type: 'warning' as const, text: '余额' },
-  [PayMode.PersonalTransfer]: { type: 'primary' as const, text: '个人转账' },
-} as const
-
-/**
- * 获取支付状态配置
- */
-const getOrderPayMode = (mode: number) => {
-  return (
-    ORDER_PAY_MODE[mode as keyof typeof ORDER_PAY_MODE] || {
-      type: 'info' as const,
-      text: '未支付'
-    }
-  )
-}
 
 const {
   columns,
@@ -166,12 +129,12 @@ const {
       {
         prop: 'code',
         label: '订单号',
-        width: 200,
+        width: 260,
       },
       {
         prop: 'productInfo',
         label: '商品信息',
-        width: 200,
+        width: 320,
         formatter: (row) => {
           return h('div', { class: 'flex-c' }, [
             h(ElImage, {
@@ -197,18 +160,10 @@ const {
         }
       },
       {
-        prop: 'totalAmount',
-        label: '实付金额',
+        prop: 'actualAmount',
+        label: '需付金额',
         formatter: (row) => {
-          return h(ElTag, { type:"primary" }, () => `${row.payAmount}${siteStore.getInfo.symbol}`)
-        }
-      },
-      {
-        prop: 'payMode',
-        label: '支付方式',
-        formatter: (row) => {
-          const mode = getOrderPayMode(row.payMode)
-          return h(ElTag, { type: mode.type }, () => mode.text)
+          return h(ElTag, { type:"primary" }, () => `${row.actualAmount}${siteStore.getInfo.symbol}`)
         }
       },
       {
@@ -230,114 +185,16 @@ const {
         width: 120,
         fixed: 'right', // 固定列
         formatter: (row) =>{
-          const btnList:ButtonMoreItem[] = []
-          
-          if (row.status == OrderStatus.PendingPayment) {
-            btnList.push({
-              key: 'addDiscount',
-              label: '添加优惠',
-              icon: 'ep:element-plus',
-              auth:'addDiscount'
-            },
-            {
-              key: 'paid',
-              label: '确认付款',
-              icon: 'solar:hand-money-bold',
-              auth:'paid'
-            },
-            {
-              key: 'cancel',
-              label: '关闭订单',
-              icon: 'solar:close-circle-bold',
-              color: '#f56c6c',
-              auth:'cancel'
-            },{
-              key: 'delete',
-              label: '删除订单',
-              icon: 'ri:delete-bin-4-line',
-              auth:'delete'
-            })
-          }
-
-          if (row.status == OrderStatus.PendingService) {
-            btnList.push({
-              key: 'start',
-              label: '开始服务',
-              icon: 'solar:stars-minimalistic-bold',
-              auth:'start'
-            },{
-              key: 'refund',
-              label: '立即退款',
-              icon: 'solar:electric-refueling-bold',
-              auth:'refund'
-            },{
-              key: 'delete',
-              label: '删除订单',
-              icon: 'ri:delete-bin-4-line',
-              auth:'delete'
-            })
-          }
-
-          if (row.status == OrderStatus.InProgress) {
-            btnList.push({
-              key: 'complete',
-              label: '完成订单',
-              icon: 'solar:traffic-economy-bold',
-              auth:'complete'
-            },{
-              key: 'refund',
-              label: '立即退款',
-              icon: 'solar:electric-refueling-bold',
-              auth:'refund'
-            },{
-              key: 'delete',
-              label: '删除订单',
-              icon: 'ri:delete-bin-4-line',
-              auth:'delete'
-            })
-          }
-
-          if (row.status == OrderStatus.Completed) {
-            btnList.push({
-              key: 'refund',
-              label: '立即退款',
-              icon: 'solar:electric-refueling-bold',
-              auth:'refund'
-            },{
-              key: 'delete',
-              label: '删除订单',
-              icon: 'ri:delete-bin-4-line',
-              auth:'delete'
-            })
-          }
-
-          if (row.status == OrderStatus.Cancel) {
-            btnList.push({
-              key: 'delete',
-              label: '删除订单',
-              icon: 'ri:delete-bin-4-line',
-              auth:'delete'
-            })
-          }
-
-          if (row.status == OrderStatus.Refund) {
-            btnList.push({
-              key: 'delete',
-              label: '删除订单',
-              icon: 'ri:delete-bin-4-line',
-              auth:'delete'
-            })
-          }
-
+  
           return h('div', { class: 'order flex-c' }, [
             (hasAuth("view") && h(ArtButtonTable, {
               type: 'view',
               onClick: () => handleView(row)
             })),
-            h(ArtButtonMore, {
-              list: btnList,
-              onClick: (item: ButtonMoreItem) => buttonMoreClick(item, row)
-            })
+            (hasAuth("delete") && h(ArtButtonTable, {
+              type: 'delete',
+              onClick: () => handleDelete(row)
+            })),
           ])
         }
       }
@@ -354,32 +211,6 @@ const {
   },
 })
 
-const buttonMoreClick = (item: ButtonMoreItem, row: Order.Response.Info) => {
-  switch (item.key) {
-    case 'addDiscount':
-      handleAddDiscount(row)
-      break
-    case 'paid':
-      handlePaid(row)
-      break
-    case 'start':
-      handleStart(row)
-      break
-    case 'cancel':
-      handleCancel(row)
-      break
-    case 'refund':
-      handleRefund(row)
-      break
-    case 'complete':
-      handleComplete(row)
-      break
-    case 'delete':
-      handleDelete(row)
-      break
-  }
-}
-
 
 /**
  * 搜索处理
@@ -391,85 +222,20 @@ const handleSearch = (params: Record<string, any>) => {
   Object.assign(searchParams, params)
   getData()
 }
-
-
-const handleRefund = (row:Order.Response.Info) => {
-   id.value = row.id
+const distributeModalVisible = ref(false)
+const handleDistribute = (row:Order.Response.Info) => {
+  id.value = row.id
   nextTick(() => {
-    refundModalVisible.value = true
+    distributeModalVisible.value = true
   })
 }
+
 const handleView = (row:Order.Response.Info) => {
     id.value = row.id
     nextTick(() => {
       viewDrawerVisible.value = true
     })
 }
-const handleAddDiscount = (row:Order.Response.Info): void => {
-  id.value = row.id
-  nextTick(() => {
-    addDiscountModalVisible.value = true
-  })
-}
-const handlePaid = (row:Order.Response.Info): void => {
-  ElMessageBox.confirm(`确定要修改订单为已支付吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'primary'
-  }).then(async() => {
-    // TODO: 调用删除接口
-    await fetchPostOrderPaid({id:row.id})
-    refreshData()
-  })
-  .catch(() => {
-    ElMessage.info('已取消')
-  })
-}
-const handleCancel = (row:Order.Response.Info): void => {
-  ElMessageBox.confirm(`确定要关闭订单吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'primary'
-  }).then(async() => {
-    // TODO: 调用删除接口
-    await fetchPostOrderCancel({id:row.id})
-    refreshData()
-  })
-  .catch(() => {
-    ElMessage.info('已取消')
-  })
-}
-
-const handleStart = (row:Order.Response.Info): void => {
-  ElMessageBox.confirm(`确定要开始服务吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'primary'
-  }).then(async() => {
-    // TODO: 调用删除接口
-    await fetchPostOrderStart({id:row.id})
-    refreshData()
-  })
-  .catch(() => {
-    ElMessage.info('已取消')
-  })
-}
-
-const handleComplete = (row:Order.Response.Info): void => {
-  ElMessageBox.confirm(`确定服务完成吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'primary'
-  }).then(async() => {
-    // TODO: 调用删除接口
-    await fetchPostOrderComplete({id:row.id})
-    refreshData()
-  })
-  .catch(() => {
-    ElMessage.info('已取消')
-  })
-}
-
 
 
 const handleBatchDelete = () =>{

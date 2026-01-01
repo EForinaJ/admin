@@ -3,12 +3,14 @@ package order
 import (
 	"context"
 
+	"server/internal/consts"
 	"server/internal/dao"
 	dto_order "server/internal/type/order/dto"
 	utils_error "server/internal/utils/error"
 	"server/internal/utils/response"
 
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/shopspring/decimal"
 )
 
@@ -40,6 +42,18 @@ func (s *sOrder) AddDiscount(ctx context.Context, req *dto_order.AddDiscount) (e
 	}).Update()
 	if err != nil {
 		return utils_error.Err(response.UNIQUE_ERROR, response.CodeMsg(response.UNIQUE_ERROR))
+	}
+
+	//  添加订单日志
+	_, err = tx.Model(dao.SysOrderLog.Table()).Data(g.Map{
+		dao.SysOrderLog.Columns().CreateTime: gtime.Now(),
+		dao.SysOrderLog.Columns().Content:    "设置优惠金额",
+		dao.SysOrderLog.Columns().ManageId:   ctx.Value("userId"),
+		dao.SysOrderLog.Columns().OrderId:    req.Id,
+		dao.SysOrderLog.Columns().Type:       consts.OrderLogTypeAddDiscount,
+	}).Insert()
+	if err != nil {
+		return utils_error.Err(response.ADD_FAILED, response.CodeMsg(response.ADD_FAILED))
 	}
 
 	return

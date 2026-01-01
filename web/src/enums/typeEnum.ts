@@ -14,6 +14,18 @@ export enum ChangeCommissionType {
   WitkeyChangeBalanceTypeSettlement = 2,      // 报单结算
 }
 
+export enum OrderLogType {
+  Create           = 1,  // 创建订单
+	AddDiscount      = 2,  // 添加优惠金额
+  Cancel           = 3,  // 关闭订单
+	Complete         = 4,  // 完成订单
+	Paid             = 5,  // 确认收款订单
+	AfterSales       = 6,  // 添加售后工单
+	Distribute       = 7,  // 派发威客
+	DistributeCancel = 8,  // 取消派单服务
+	Start            = 9, // 开始服务
+	Refund           = 10, // 订单手动退款
+}
 
 export enum CpitalType {
   PaymentOrder = 1,// 支付订单

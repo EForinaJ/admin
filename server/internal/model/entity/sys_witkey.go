@@ -18,6 +18,7 @@ type SysWitkey struct {
 	Rate        int         `json:"rate"        orm:"rate"        description:""`     //
 	Commission  float64     `json:"commission"  orm:"commission"  description:""`     //
 	Description string      `json:"description" orm:"description" description:""`     //
+	Status      int         `json:"status"      orm:"status"      description:""`     //
 	CreateTime  *gtime.Time `json:"createTime"  orm:"create_time" description:"创建时间"` // 创建时间
 	UpdateTime  *gtime.Time `json:"updateTime"  orm:"update_time" description:"更新时间"` // 更新时间
 }

@@ -1,6 +1,8 @@
 package aftersales
 
-import "server/internal/service"
+import (
+	"server/internal/service"
+)
 
 type sAftersales struct{}
 

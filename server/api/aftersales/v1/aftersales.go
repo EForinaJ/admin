@@ -23,3 +23,9 @@ type GetDetailReq struct {
 type GetDetailRes struct {
 	*dao_aftersales.Detail
 }
+
+type ApplyReq struct {
+	g.Meta `path:"/aftersales/apply" method:"post" tags:"售后" summary:"审核售后"`
+	*dto_aftersales.Apply
+}
+type ApplyRes struct{}

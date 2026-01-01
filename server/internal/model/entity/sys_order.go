@@ -14,8 +14,6 @@ type SysOrder struct {
 	Code           string      `json:"code"           orm:"code"            description:""`     //
 	UserId         int64       `json:"userId"         orm:"user_id"         description:""`     //
 	ProductId      int64       `json:"productId"      orm:"product_id"      description:""`     //
-	ManageId       int64       `json:"manageId"       orm:"manage_id"       description:""`     //
-	Specifications string      `json:"specifications" orm:"specifications"  description:""`     //
 	WitkeyCount    int         `json:"witkeyCount"    orm:"witkey_count"    description:""`     //
 	Quantity       int         `json:"quantity"       orm:"quantity"        description:""`     //
 	Unit           string      `json:"unit"           orm:"unit"            description:""`     //

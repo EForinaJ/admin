@@ -24,8 +24,6 @@ type SysOrderColumns struct {
 	Code           string //
 	UserId         string //
 	ProductId      string //
-	ManageId       string //
-	Specifications string //
 	WitkeyCount    string //
 	Quantity       string //
 	Unit           string //
@@ -53,8 +51,6 @@ var sysOrderColumns = SysOrderColumns{
 	Code:           "code",
 	UserId:         "user_id",
 	ProductId:      "product_id",
-	ManageId:       "manage_id",
-	Specifications: "specifications",
 	WitkeyCount:    "witkey_count",
 	Quantity:       "quantity",
 	Unit:           "unit",

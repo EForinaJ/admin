@@ -3,6 +3,8 @@ package v1
 import (
 	dao_order "server/internal/type/order/dao"
 	dto_order "server/internal/type/order/dto"
+	dao_witkey "server/internal/type/witkey/dao"
+	dto_witkey "server/internal/type/witkey/dto"
 
 	"github.com/gogf/gf/v2/frame/g"
 )
@@ -65,3 +67,42 @@ type CompleteReq struct {
 	Id     int64 `p:"id" v:"required|integer|min:1#请输入id|id类型必须是整型|id最小为1" dc:"id"`
 }
 type CompleteRes struct{}
+
+type GetWitkeyListReq struct {
+	g.Meta `path:"/order/witkey/list" method:"get" tags:"订单" summary:"威客列表"`
+	*dto_witkey.Query
+}
+type GetWitkeyListRes struct {
+	Total int                `json:"total" dc:"总数"`
+	List  []*dao_witkey.List `json:"list" dc:"威客列表"`
+}
+
+type DistributeReq struct {
+	g.Meta `path:"/order/distribute" method:"post" tags:"订单" summary:"派发威客"`
+	*dto_order.Distribute
+}
+type DistributeRes struct{}
+
+type GetDistributeListReq struct {
+	g.Meta `path:"/order/distribute/list" method:"get" tags:"订单" summary:"派单列表"`
+	*dto_order.DistributeQuery
+}
+type GetDistributeListRes struct {
+	Total int                         `json:"total" dc:"总数"`
+	List  []*dao_order.DistributeList `json:"list" dc:"派单列表"`
+}
+
+type DistributeCancelReq struct {
+	g.Meta `path:"/order/distribute/cancel" method:"post" tags:"订单" summary:"派发取消"`
+	*dto_order.DistributeCancel
+}
+type DistributeCancelRes struct{}
+
+type GetLogListReq struct {
+	g.Meta `path:"/order/log/list" method:"get" tags:"订单" summary:"订单日志"`
+	*dto_order.LogQuery
+}
+type GetLogListRes struct {
+	Total int                  `json:"total" dc:"总数"`
+	List  []*dao_order.LogList `json:"list" dc:"订单日志列表"`
+}

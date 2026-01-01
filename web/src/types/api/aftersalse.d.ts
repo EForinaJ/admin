@@ -70,6 +70,7 @@ declare namespace Aftersales {
                 finishTime:string | null;
                 requirements:string | null;
             };
+            reject:string;
             createTime:string;
         }
 

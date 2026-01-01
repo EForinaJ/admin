@@ -18,6 +18,7 @@ type SysAftersales struct {
 	Type       int         `json:"type"       orm:"type"        description:""` //
 	Amount     float64     `json:"amount"     orm:"amount"      description:""` //
 	Reason     string      `json:"reason"     orm:"reason"      description:""` //
+	Reject     string      `json:"reject"     orm:"reject"      description:""` //
 	Status     int         `json:"status"     orm:"status"      description:""` //
 	CreateTime *gtime.Time `json:"createTime" orm:"create_time" description:""` //
 }

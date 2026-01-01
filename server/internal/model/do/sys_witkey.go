@@ -20,6 +20,7 @@ type SysWitkey struct {
 	Rate        interface{} //
 	Commission  interface{} //
 	Description interface{} //
+	Status      interface{} //
 	CreateTime  *gtime.Time // 创建时间
 	UpdateTime  *gtime.Time // 更新时间
 }

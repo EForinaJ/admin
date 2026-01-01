@@ -6,6 +6,18 @@ declare namespace Order {
             code?: string;
             status?: number;
         }
+        type DistributeQuery = {
+            page: number;
+            limit: number;
+            id: number;
+            name?: string;
+            status?: number;
+        }
+        type LogQuery = {
+            page: number;
+            limit: number;
+            id: number;
+        }
         type AddDiscount = {
             id: number;
             amount?: number | null;
@@ -14,6 +26,14 @@ declare namespace Order {
             id: number;
             type: number;
             amount: number | null;
+            reason: string | null;
+        }
+        type Distribute = {
+            id: number;
+            witkeyId: number;
+        }
+        type DistributeCancel = {
+            id: number;
             reason: string | null;
         }
     }
@@ -32,7 +52,7 @@ declare namespace Order {
                 game: string;
                 category: string;
             };
-            payAmount: number;
+            actualAmount: number;
             status: number;
             payMode: number;
             createTime: string;
@@ -70,5 +90,25 @@ declare namespace Order {
             finishTime:string | null;
             requirements:string | null;
         }
+
+        type DistributeList = Api.Common.PaginatedResponse<{
+            id: number;
+            code:string;
+            manage: string;
+            witkey:string;
+            game:string;
+            title:string;
+            reason:string;
+            isCancel:number;
+            createTime:string;
+        }>
+
+        type LogList = Api.Common.PaginatedResponse<{
+            id: number;
+            manage: string;
+            type:number;
+            content:string;
+            createTime:string;
+        }>
     }
 }

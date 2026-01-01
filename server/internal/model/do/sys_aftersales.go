@@ -20,6 +20,7 @@ type SysAftersales struct {
 	Type       interface{} //
 	Amount     interface{} //
 	Reason     interface{} //
+	Reject     interface{} //
 	Status     interface{} //
 	CreateTime *gtime.Time //
 }

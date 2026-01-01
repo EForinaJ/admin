@@ -15,5 +15,6 @@ type Detail struct {
 	Type       int               `json:"type" dc:"退款类型"`
 	Reason     string            `json:"reason" dc:"退款原因"`
 	Status     int               `json:"status" dc:"状态"`
+	Reject     string            `json:"reject" dc:"驳回原因"`
 	CreateTime *gtime.Time       `json:"createTime" dc:"下单时间"`
 }

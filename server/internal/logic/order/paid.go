@@ -76,6 +76,17 @@ func (s *sOrder) Paid(ctx context.Context, id int64) (err error) {
 	if err != nil {
 		return utils_error.Err(response.ADD_FAILED, response.CodeMsg(response.ADD_FAILED))
 	}
+	//  添加订单日志
+	_, err = tx.Model(dao.SysOrderLog.Table()).Data(g.Map{
+		dao.SysOrderLog.Columns().CreateTime: gtime.Now(),
+		dao.SysOrderLog.Columns().Content:    "订单手动收款",
+		dao.SysOrderLog.Columns().ManageId:   ctx.Value("userId"),
+		dao.SysOrderLog.Columns().OrderId:    id,
+		dao.SysOrderLog.Columns().Type:       consts.OrderLogTypePaid,
+	}).Insert()
+	if err != nil {
+		return utils_error.Err(response.ADD_FAILED, response.CodeMsg(response.ADD_FAILED))
+	}
 
 	return
 }

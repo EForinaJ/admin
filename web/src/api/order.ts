@@ -59,3 +59,35 @@ export function fetchPostOrderDelete(data: {ids:number[]}) {
   })
 }
 
+export function fetchGetOrderWitkeyList(params: Witkey.Params.Query) {
+  return request.get<Witkey.Response.List>({
+    url: '/order/witkey/list',
+    params
+  })
+}
+
+
+export function fetchPostOrderDistribute(data:Order.Params.Distribute) {
+  return request.post({
+    url: '/order/distribute',
+    data
+  })
+}
+export function fetchGetOrderDistributeList(params: Order.Params.DistributeQuery) {
+  return request.get<Order.Response.DistributeList>({
+    url: '/order/distribute/list',
+    params
+  })
+}
+export function fetchPostOrderDistributeCancel(data:Order.Params.DistributeCancel) {
+  return request.post({
+    url: '/order/distribute/cancel',
+    data
+  })
+}
+export function fetchGetOrderLogList(params: Order.Params.LogQuery) {
+  return request.get<Order.Response.LogList>({
+    url: '/order/log/list',
+    params
+  })
+}
