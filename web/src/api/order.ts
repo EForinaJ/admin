@@ -14,7 +14,7 @@ export function fetchPostOrderAddDiscount(data: Order.Params.AddDiscount) {
   })
 }
 
-export function fetchPostOrderPaid(data:{id:number}) {
+export function fetchPostOrderPaid(data:{id:number,payMode:number}) {
   return request.post({
     url: '/order/paid',
     data

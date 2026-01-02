@@ -8,10 +8,10 @@ import (
 )
 
 func (c *ControllerV1) Paid(ctx context.Context, req *v1.PaidReq) (res *v1.PaidRes, err error) {
-	err = service.Order().CheckPaid(ctx, req.Id)
+	err = service.Order().CheckPaid(ctx, req.Paid)
 	if err != nil {
 		return nil, err
 	}
-	err = service.Order().Paid(ctx, req.Id)
+	err = service.Order().Paid(ctx, req.Paid)
 	return
 }

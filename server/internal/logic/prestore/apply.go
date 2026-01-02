@@ -37,7 +37,6 @@ func (s *sPrestore) Apply(ctx context.Context, req *dto_prestore.Apply) (err err
 		}
 		amount := decimal.NewFromFloat(gconv.Float64(obj.GMap().Get(dao.SysPrestore.Columns().Amount))).
 			Add(decimal.NewFromFloat(gconv.Float64(obj.GMap().Get(dao.SysPrestore.Columns().BonusAmount))))
-		g.Dump(amount)
 		code := utils_code.GetCode(ctx, consts.CZ)
 		rs, err := tx.Model(dao.SysRecharge.Table()).
 			Data(g.Map{

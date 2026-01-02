@@ -25,8 +25,18 @@
                     <!-- 未支付 -->
                     <ElButton v-if="detail?.status == OrderStatus.PendingPayment"
                     @click="handleAddDiscount" size="small" type="primary">添加优惠</ElButton>
-                    <ElButton v-if="detail?.status == OrderStatus.PendingPayment" 
-                    @click="handlePaid" size="small" type="success">确认收款</ElButton>
+                    <ElPopconfirm 
+                        @cancel="handlePaid(PayMode.Balance)"
+                        @confirm="handlePaid(PayMode.PersonalTransfer)"
+                        cancel-button-text="余额"
+                        cancel-button-type="warning"
+                        confirm-button-text="转账"
+                        v-if="detail?.status == OrderStatus.PendingPayment" 
+                        title="订单收款类型">
+                        <template #reference>
+                            <ElButton size="small" type="success">确认收款</ElButton>
+                        </template>
+                    </ElPopconfirm>
                     <ElButton v-if="detail?.status == OrderStatus.PendingPayment" 
                     @click="handleCancel" size="small" type="danger">关闭订单</ElButton>
 
@@ -151,6 +161,8 @@
         :id="id"
         @submit="getData"
     />
+
+  
 </template>
 
 <script setup lang="ts">
@@ -162,6 +174,7 @@ import OrderAddDiscountModal from './order-add-discount-modal.vue';
 // import OrderAftersalesModal from './order-aftersales-modal.vue';
 import { ElMessageBox } from 'element-plus';
 import OrderDistributeModal from './order-distribute-modal.vue';
+
 
 interface Props {
   id?: number;
@@ -268,20 +281,38 @@ const handleDistribute = () => {
     })
 }
 
-const handlePaid = (): void => {
-ElMessageBox.confirm(`请确认是否已收款订单`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'primary'
-}).then(async() => {
-    // TODO: 调用删除接口
-    await fetchPostOrderPaid({id:props.id!})
-    getData()
-})
-.catch(() => {
-    ElMessage.info('已取消')
-})
+
+const handlePaid = (mode:number): void => {
+   if (mode == PayMode.Balance) {
+        ElMessageBox.confirm(`确认使用余额收款吗`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'primary'
+        }).then(async() => {
+            // TODO: 调用删除接口
+            await fetchPostOrderPaid({id:props.id!,payMode: PayMode.Balance})
+            getData()
+        })
+        .catch(() => {
+            ElMessage.info('已取消')
+        })
+   }
+   if (mode == PayMode.PersonalTransfer) {
+        ElMessageBox.confirm(`确认是否已人工转账`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'primary'
+        }).then(async() => {
+            // TODO: 调用删除接口
+            await fetchPostOrderPaid({id:props.id!,payMode: PayMode.PersonalTransfer})
+            getData()
+        })
+        .catch(() => {
+            ElMessage.info('已取消')
+        })
+   }
 }
+
 const handleCancel = (): void => {
 ElMessageBox.confirm(`确定要关闭订单吗？`, '提示', {
     confirmButtonText: '确定',

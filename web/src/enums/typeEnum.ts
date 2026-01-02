@@ -13,6 +13,7 @@ export enum SexType {
 export enum ChangeBalanceType {
   UserChangeBalanceTypeSystem = 1,      // 系统变更
   UserChangeBalanceTypeRecharge = 2,      // 用户充值
+  UserChangeBalanceTypePaidOrder = 3,      // 订单消费
 }
 
 export enum ChangeCommissionType {

@@ -16,8 +16,9 @@ const (
 )
 
 const (
-	UserChangeBalanceTypeSystem   = 1 // 系统变更余额
-	UserChangeBalanceTypeRecharge = 2 // 用户充值
+	UserChangeBalanceTypeSystem    = 1 // 系统变更余额
+	UserChangeBalanceTypeRecharge  = 2 // 用户充值
+	UserChangeBalanceTypePaidOrder = 3 // 订单余额消费
 )
 
 const (

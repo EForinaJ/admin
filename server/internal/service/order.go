@@ -16,7 +16,7 @@ type IOrder interface {
 	// 创建订单
 	Refund(ctx context.Context, req *dto_order.Refund) (err error)
 	Delete(ctx context.Context, ids []int64) (err error)
-	Paid(ctx context.Context, id int64) (err error)
+	Paid(ctx context.Context, req *dto_order.Paid) (err error)
 	AddDiscount(ctx context.Context, req *dto_order.AddDiscount) (err error)
 	Cancel(ctx context.Context, id int64) (err error)
 	StartService(ctx context.Context, id int64) (err error)
@@ -26,7 +26,7 @@ type IOrder interface {
 
 	CheckComplete(ctx context.Context, id int64) (err error)
 	CheckStartService(ctx context.Context, id int64) (err error)
-	CheckPaid(ctx context.Context, id int64) (err error)
+	CheckPaid(ctx context.Context, req *dto_order.Paid) (err error)
 	CheckCancel(ctx context.Context, id int64) (err error)
 	CheckDiscount(ctx context.Context, req *dto_order.AddDiscount) (err error)
 	CheckRefund(ctx context.Context, req *dto_order.Refund) (err error)

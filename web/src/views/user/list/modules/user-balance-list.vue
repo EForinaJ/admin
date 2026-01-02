@@ -54,6 +54,7 @@ const {
                     const label: Record<number, string> = {
                         [ChangeBalanceType.UserChangeBalanceTypeSystem]: '系统变更余额',
                         [ChangeBalanceType.UserChangeBalanceTypeRecharge]: '用户充值',
+                        [ChangeBalanceType.UserChangeBalanceTypePaidOrder]: '订单消费',
                     };
                     return h(ElTag, { 
                         type: "primary"
