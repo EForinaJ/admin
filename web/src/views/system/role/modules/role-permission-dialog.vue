@@ -177,7 +177,6 @@
     const tree = treeRef.value
     if (!tree) return
     const  checkedKeys = tree.getCheckedKeys()
-    console.log(checkedKeys)
     await fetchRoleEditPermissions({id:props.id!,permissions:checkedKeys})
     ElMessage.success('权限保存成功')
     emit('submit')

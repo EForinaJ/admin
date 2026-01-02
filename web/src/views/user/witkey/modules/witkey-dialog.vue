@@ -180,11 +180,10 @@ const getUserOptions =  async (phone:string) => {
       loading.value = false
   }
 }
-
 // 创建防抖版本
 const getUserOptionsDebounced = debounce((query: string) => {
-loading.value = true
-getUserOptions(query)
+  loading.value = true
+  getUserOptions(query)
 }, 500)
 const remoteMethod = (query: string) => {
   if (query) {

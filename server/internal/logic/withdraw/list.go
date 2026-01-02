@@ -21,14 +21,8 @@ func (s *sWithdraw) GetList(ctx context.Context, req *dto_withdraw.Query) (total
 		m = m.Where(dao.SysWithdraw.Columns().Code, req.Code)
 	}
 	if req.Name != "" {
-		userId, err := dao.SysUser.Ctx(ctx).
-			Where(dao.SysUser.Columns().Name, req.Name).
-			Value(dao.SysUser.Columns().Id)
-		if err != nil {
-			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-		}
 		witkeyId, err := dao.SysWitkey.Ctx(ctx).
-			Where(dao.SysWitkey.Columns().UserId, userId).
+			Where(dao.SysWitkey.Columns().Name, req.Name).
 			Value(dao.SysWitkey.Columns().Id)
 		if err != nil {
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))

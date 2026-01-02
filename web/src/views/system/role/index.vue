@@ -21,7 +21,7 @@
       >
         <template #left>
           <ElSpace wrap>
-            <ElButton @click="handleCreate" v-ripple>新增角色</ElButton>
+            <ElButton v-auth="'create'"  @click="handleCreate" v-ripple>新增角色</ElButton>
           </ElSpace>
         </template>
       </ArtTableHeader>
@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { ButtonMoreItem } from '@/components/core/forms/art-button-more/index.vue'
 import { useTable } from '@/hooks/core/useTable'
-
+import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
 import ArtButtonMore from '@/components/core/forms/art-button-more/index.vue'
 import RoleSearch from './modules/role-search.vue'
 import RoleDialog from './modules/role-dialog.vue'
@@ -71,11 +71,11 @@ import RolePermissionDialog from './modules/role-permission-dialog.vue'
 import { ElTag, ElMessageBox } from 'element-plus'
 import { fetchRoleDelete, fetchRoleList } from '@/api/role'
 import RoleMenuDialog from './modules/role-menu-dialog.vue'
-import { Status } from '@/enums/statusEnum'
+import { useAuth } from '@/hooks'
 import { RoleType } from '@/enums/typeEnum'
 
   defineOptions({ name: 'Role' })
-
+  const { hasAuth } = useAuth();
 
   // 搜索表单
   const searchForm = ref({
@@ -172,41 +172,52 @@ import { RoleType } from '@/enums/typeEnum'
         {
           prop: 'operation',
           label: '操作',
-          width: 80,
+          width: 120,
           fixed: 'right',
-          formatter: (row) =>
-            h('div', [
+          formatter: (row) => {
+            const list:ButtonMoreItem[] = []
+            if (row.type == RoleType.Kefu) {
+              list.push({
+                key: 'delete',
+                label: '删除角色',
+                icon: 'ri:delete-bin-4-line',
+                color: '#f56c6c',
+                auth:'delete'
+              })
+            }
+
+            if (row.type == RoleType.Super) {
+              list.push({
+                key: 'setMenu',
+                label: '设置菜单',
+                icon: 'ep:element-plus',
+                auth:'setMenu'
+              },
+              {
+                key: 'setPermission',
+                label: '设置权限',
+                icon: 'ep:pear',
+                auth:'setPermission'
+              },
+              {
+                key: 'delete',
+                label: '删除角色',
+                icon: 'ri:delete-bin-4-line',
+                color: '#f56c6c',
+                auth:'delete'
+              })
+            }
+            return h('div',{ class: 'user flex-c' }, [
+              (hasAuth("edit") && h(ArtButtonTable, {
+                type: 'edit',
+                onClick: () => handleEdit(row)
+              })),
               h(ArtButtonMore, {
-                list: [
-                  {
-                    key: 'setMenu',
-                    label: '设置菜单',
-                    icon: 'ep:element-plus',
-                    auth:'setMenu'
-                  },
-                  {
-                    key: 'setPermission',
-                    label: '设置权限',
-                    icon: 'ep:pear',
-                    auth:'setPermission'
-                  },
-                  {
-                    key: 'edit',
-                    label: '编辑角色',
-                    icon: 'ri:edit-2-line',
-                    auth:'edit'
-                  },
-                  {
-                    key: 'delete',
-                    label: '删除角色',
-                    icon: 'ri:delete-bin-4-line',
-                    color: '#f56c6c',
-                    auth:'delete'
-                  }
-                ],
+                list: list,
                 onClick: (item: ButtonMoreItem) => buttonMoreClick(item, row)
               })
             ])
+          }
         }
       ]
     },

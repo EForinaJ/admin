@@ -16,6 +16,7 @@ import (
 	"server/internal/controller/menu"
 	"server/internal/controller/order"
 	"server/internal/controller/permission"
+	"server/internal/controller/prestore"
 	"server/internal/controller/product"
 	"server/internal/controller/recharge"
 	"server/internal/controller/role"
@@ -69,6 +70,7 @@ func LoadRouter(s *ghttp.Server) {
 			aftersales.NewV1(),
 			capital.NewV1(),
 
+			prestore.NewV1(),
 			recharge.NewV1(),
 			withdraw.NewV1(),
 			system.NewV1(),

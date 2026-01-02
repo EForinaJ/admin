@@ -19,7 +19,6 @@ type IUser interface {
 	ChangeBalance(ctx context.Context, req *dto_user.ChangeBalance) (err error)
 	Edit(ctx context.Context, req *dto_user.Edit) (err error)
 	Create(ctx context.Context, req *dto_user.Create) (err error)
-	Recharge(ctx context.Context, req *dto_user.Recharge) (err error)
 
 	GetBalanceList(ctx context.Context, req *dto_user.BalanceQuery) (total int, res []*dao_user.BalanceList, err error)
 	Delete(ctx context.Context, ids []int64) (err error)

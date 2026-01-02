@@ -16,6 +16,7 @@ import (
 	_ "server/internal/logic/menu"
 	_ "server/internal/logic/order"
 	_ "server/internal/logic/permission"
+	_ "server/internal/logic/prestore"
 	_ "server/internal/logic/product"
 	_ "server/internal/logic/recharge"
 	_ "server/internal/logic/role"

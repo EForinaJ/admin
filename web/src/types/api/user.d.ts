@@ -24,11 +24,6 @@ declare namespace User {
             amount: number | null;
             remark: string | null;
         }
-
-        interface Recharge {
-            id?: number;
-            amount: number | null;
-        }
     }
     namespace Response {
        

@@ -53,16 +53,6 @@ export function fetchPostUserChangeBalance(data: User.Params.ChangeBalance) {
 }
 
 
-
-export function fetchPostUserRecharge(data: User.Params.Recharge) {
-  return request.post({
-    url: '/user/recharge',
-    method: 'post',
-    data:data
-  });
-}
-
-
 export function fetchGetUserBalanceList(params: {
   id: number,
   page: number,

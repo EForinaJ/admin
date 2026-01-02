@@ -54,12 +54,6 @@
         :id="id"
         @submit="refreshData"
       />
-      <!-- 充值弹窗 -->
-      <UserRechargeModal
-        v-model:visible="rechargeModalVisible"
-        :id="id"
-        @submit="refreshData"
-      />
     </ElCard>
   </div>
 </template>
@@ -79,7 +73,6 @@ import { ButtonMoreItem } from '@/components/core/forms/art-button-more/index.vu
 import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
 import ArtButtonMore from '@/components/core/forms/art-button-more/index.vue'
 import UserChangeBalanceModal from './modules/user-change-balance-modal.vue'
-import UserRechargeModal from './modules/user-recharge-modal.vue'
 
 const { hasAuth } = useAuth();
 defineOptions({ name: 'User' })
@@ -93,7 +86,6 @@ const drawerType = ref<"create" | "edit">('create')
 const drawerVisible = ref(false)
 const viewDrawerVisible = ref(false)
 const changeBalanceModalVisible = ref(false)
-const rechargeModalVisible = ref(false)
 const id = ref<number>(0)
 
 // 选中行
@@ -227,12 +219,6 @@ const {
                   auth:'changeBalance'
                 },
                 {
-                  key: 'recharge',
-                  label: '预存余额',
-                  icon: 'ep:pear',
-                  auth:'recharge'
-                },
-                {
                   key: 'edit',
                   label: '编辑角色',
                   icon: 'ri:edit-2-line',
@@ -268,9 +254,6 @@ const buttonMoreClick = (item: ButtonMoreItem, row: User.Response.Info) => {
   switch (item.key) {
     case 'changeBalance':
       handleChangeBalance(row)
-      break
-    case 'recharge':
-      handleRecharge(row)
       break
     case 'edit':
       handleEdit(row)
@@ -320,12 +303,6 @@ const handleChangeBalance = (row:User.Response.Info): void => {
   id.value = row.id
   nextTick(() => {
     changeBalanceModalVisible.value = true
-  })
-}
-const handleRecharge = (row:User.Response.Info): void => {
-  id.value = row.id
-  nextTick(() => {
-    rechargeModalVisible.value = true
   })
 }
 

@@ -49,12 +49,6 @@ type ChangeBalanceReq struct {
 }
 type ChangeBalanceRes struct{}
 
-type RechargeReq struct {
-	g.Meta `path:"/user/recharge" method:"post" tags:"用户" summary:"预存充值"`
-	*dto_user.Recharge
-}
-type RechargeRes struct{}
-
 type GetBalanceListReq struct {
 	g.Meta `path:"/user/balance/list" method:"get" tags:"用户" summary:"余额日志"`
 	*dto_user.BalanceQuery
