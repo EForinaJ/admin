@@ -16,14 +16,16 @@ type GetListRes struct {
 	List  []*dao_distribute.List `json:"list" dc:"派单列表"`
 }
 
-type CreateReq struct {
-	g.Meta `path:"/distribute/create" method:"post" tags:"派单" summary:"创建派单"`
-	*dto_distribute.Create
-}
-type CreateRes struct{}
-
 type CancelReq struct {
-	g.Meta `path:"/distribute/cancel" method:"post" tags:"派单" summary:"取消派单"`
+	g.Meta `path:"/distribute/cancel" method:"post" tags:"派单" summary:"派单取消"`
 	*dto_distribute.Cancel
 }
 type CancelRes struct{}
+
+type GetDetailReq struct {
+	g.Meta `path:"/distribute/detail" method:"get" tags:"派单" summary:"获取信息"`
+	Id     int64 `p:"id" v:"required|integer|min:1#请输入id|id类型必须是整型|id最小为1" dc:"id"`
+}
+type GetDetailRes struct {
+	*dao_distribute.Detail
+}

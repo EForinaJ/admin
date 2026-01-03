@@ -9,16 +9,12 @@
             <template #header>
                 <div class="flex items-center gap-3">
                     <div class="font-bold">
-                        预存编号: {{ detail?.code }}
-                    </div>
-                    <el-divider direction="vertical" />
-                    <div class="font-bold">
                         申请时间: {{ detail?.createTime }}
                     </div>
                 </div>
             </template>
             <ElDescriptions>
-                <ElDescriptionsItem :span="3"  label="申请人">
+                <ElDescriptionsItem :span="3"  label="预存用户">
                     {{ detail?.user }}
                 </ElDescriptionsItem>
                 <ElDescriptionsItem  :span="3"  label="操作人">

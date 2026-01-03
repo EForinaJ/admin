@@ -6,13 +6,6 @@ declare namespace Order {
             code?: string;
             status?: number;
         }
-        type DistributeQuery = {
-            page: number;
-            limit: number;
-            id: number;
-            name?: string;
-            status?: number;
-        }
         type LogQuery = {
             page: number;
             limit: number;
@@ -31,10 +24,11 @@ declare namespace Order {
         type Distribute = {
             id: number;
             witkeyId: number;
+            type: number;
         }
-        type DistributeCancel = {
+        type Paid = {
             id: number;
-            reason: string | null;
+            payMode: number;
         }
     }
     namespace Response {
@@ -91,18 +85,7 @@ declare namespace Order {
             requirements:string | null;
         }
 
-        type DistributeList = Api.Common.PaginatedResponse<{
-            id: number;
-            code:string;
-            manage: string;
-            witkey:string;
-            game:string;
-            title:string;
-            reason:string;
-            isCancel:number;
-            createTime:string;
-        }>
-
+        
         type LogList = Api.Common.PaginatedResponse<{
             id: number;
             manage: string;

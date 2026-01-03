@@ -14,7 +14,7 @@ export function fetchPostOrderAddDiscount(data: Order.Params.AddDiscount) {
   })
 }
 
-export function fetchPostOrderPaid(data:{id:number,payMode:number}) {
+export function fetchPostOrderPaid(data:Order.Params.Paid) {
   return request.post({
     url: '/order/paid',
     data
@@ -73,18 +73,7 @@ export function fetchPostOrderDistribute(data:Order.Params.Distribute) {
     data
   })
 }
-export function fetchGetOrderDistributeList(params: Order.Params.DistributeQuery) {
-  return request.get<Order.Response.DistributeList>({
-    url: '/order/distribute/list',
-    params
-  })
-}
-export function fetchPostOrderDistributeCancel(data:Order.Params.DistributeCancel) {
-  return request.post({
-    url: '/order/distribute/cancel',
-    data
-  })
-}
+
 export function fetchGetOrderLogList(params: Order.Params.LogQuery) {
   return request.get<Order.Response.LogList>({
     url: '/order/log/list',

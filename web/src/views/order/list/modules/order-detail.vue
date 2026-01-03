@@ -25,24 +25,14 @@
                     <!-- 未支付 -->
                     <ElButton v-if="detail?.status == OrderStatus.PendingPayment"
                     @click="handleAddDiscount" size="small" type="primary">添加优惠</ElButton>
-                    <ElPopconfirm 
-                        @cancel="handlePaid(PayMode.Balance)"
-                        @confirm="handlePaid(PayMode.PersonalTransfer)"
-                        cancel-button-text="余额"
-                        cancel-button-type="warning"
-                        confirm-button-text="转账"
-                        v-if="detail?.status == OrderStatus.PendingPayment" 
-                        title="订单收款类型">
-                        <template #reference>
-                            <ElButton size="small" type="success">确认收款</ElButton>
-                        </template>
-                    </ElPopconfirm>
+                    <ElButton  v-if="detail?.status == OrderStatus.PendingPayment" 
+                    @click="handlePaid" size="small" type="success">确认收款</ElButton>
                     <ElButton v-if="detail?.status == OrderStatus.PendingPayment" 
                     @click="handleCancel" size="small" type="danger">关闭订单</ElButton>
 
                     <!-- 已支付 -->
                     <ElButton v-if="detail?.status == OrderStatus.PendingService"
-                    @click="handleAftersales" size="small" type="warning">售后工单</ElButton>
+                    @click="handleRefund" size="small" type="warning">立即退款</ElButton>
                     <ElButton v-if="detail?.status == OrderStatus.PendingService"
                     @click="handleDistribute" size="small" type="primary">立即派单</ElButton>
                     <ElButton v-if="detail?.status == OrderStatus.PendingService"
@@ -50,7 +40,7 @@
 
                     <!-- 进行中 -->
                     <ElButton v-if="detail?.status == OrderStatus.InProgress"
-                    @click="handleAftersales" size="small" type="warning">售后退款</ElButton>
+                    @click="handleRefund" size="small" type="warning">立即退款</ElButton>
                     <ElButton v-if="detail?.status == OrderStatus.InProgress"
                     @click="handleComplete" size="small" type="primary">结束完成</ElButton>
                 </ElSpace>
@@ -150,18 +140,22 @@
         @submit="getData"
     />
     
-    <!-- <OrderAftersalesModal
-        v-model:visible="aftersalesModalVisible"
+    <OrderPaidModal
+        v-model:visible="paidModalVisible"
         :id="id"
         @submit="getData"
-    /> -->
+    />
 
     <OrderDistributeModal
         v-model:visible="distributeModalVisible"
         :id="id"
         @submit="getData"
     />
-
+    <OrderRefundModal
+        v-model:visible="refundModalVisible"
+        :id="id"
+        @submit="getData"
+    />
   
 </template>
 
@@ -171,9 +165,10 @@ import { PayMode } from '@/enums/modeEnum';
 import { OrderStatus, PayStatus } from '@/enums/statusEnum';
 import { useSiteStore } from '@/store/modules/site';
 import OrderAddDiscountModal from './order-add-discount-modal.vue';
-// import OrderAftersalesModal from './order-aftersales-modal.vue';
 import { ElMessageBox } from 'element-plus';
 import OrderDistributeModal from './order-distribute-modal.vue';
+import OrderPaidModal from './order-paid-modal.vue';
+import OrderRefundModal from './order-refund-modal.vue';
 
 
 interface Props {
@@ -266,10 +261,10 @@ const handleAddDiscount = (): void => {
     })
 }
 
-const aftersalesModalVisible = ref(false)
-const handleAftersales = () => {
+const refundModalVisible = ref(false)
+const handleRefund = () => {
     nextTick(() => {
-        aftersalesModalVisible.value = true
+        refundModalVisible.value = true
     })
 }
 
@@ -282,35 +277,11 @@ const handleDistribute = () => {
 }
 
 
-const handlePaid = (mode:number): void => {
-   if (mode == PayMode.Balance) {
-        ElMessageBox.confirm(`确认使用余额收款吗`, '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'primary'
-        }).then(async() => {
-            // TODO: 调用删除接口
-            await fetchPostOrderPaid({id:props.id!,payMode: PayMode.Balance})
-            getData()
-        })
-        .catch(() => {
-            ElMessage.info('已取消')
-        })
-   }
-   if (mode == PayMode.PersonalTransfer) {
-        ElMessageBox.confirm(`确认是否已人工转账`, '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'primary'
-        }).then(async() => {
-            // TODO: 调用删除接口
-            await fetchPostOrderPaid({id:props.id!,payMode: PayMode.PersonalTransfer})
-            getData()
-        })
-        .catch(() => {
-            ElMessage.info('已取消')
-        })
-   }
+const paidModalVisible = ref(false)
+const handlePaid = (): void => {
+    nextTick(() => {
+        paidModalVisible.value = true
+    })
 }
 
 const handleCancel = (): void => {

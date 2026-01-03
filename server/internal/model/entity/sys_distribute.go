@@ -14,8 +14,8 @@ type SysDistribute struct {
 	OrderId    int64       `json:"orderId"    orm:"order_id"    description:""` //
 	WitkeyId   int64       `json:"witkeyId"   orm:"witkey_id"   description:""` //
 	ManageId   int64       `json:"manageId"   orm:"manage_id"   description:""` //
-	IsCancel   int         `json:"isCancel"   orm:"is_cancel"   description:""` //
-	Images     string      `json:"images"     orm:"images"      description:""` //
+	Type       int         `json:"type"       orm:"type"        description:""` //
 	Reason     string      `json:"reason"     orm:"reason"      description:""` //
+	Status     int         `json:"status"     orm:"status"      description:""` //
 	CreateTime *gtime.Time `json:"createTime" orm:"create_time" description:""` //
 }

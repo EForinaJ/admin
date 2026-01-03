@@ -83,21 +83,6 @@ type DistributeReq struct {
 }
 type DistributeRes struct{}
 
-type GetDistributeListReq struct {
-	g.Meta `path:"/order/distribute/list" method:"get" tags:"订单" summary:"派单列表"`
-	*dto_order.DistributeQuery
-}
-type GetDistributeListRes struct {
-	Total int                         `json:"total" dc:"总数"`
-	List  []*dao_order.DistributeList `json:"list" dc:"派单列表"`
-}
-
-type DistributeCancelReq struct {
-	g.Meta `path:"/order/distribute/cancel" method:"post" tags:"订单" summary:"派发取消"`
-	*dto_order.DistributeCancel
-}
-type DistributeCancelRes struct{}
-
 type GetLogListReq struct {
 	g.Meta `path:"/order/log/list" method:"get" tags:"订单" summary:"订单日志"`
 	*dto_order.LogQuery

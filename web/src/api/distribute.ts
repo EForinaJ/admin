@@ -6,14 +6,13 @@ export function fetchGetDistributeList(params: Distribute.Params.Query) {
     params
   })
 }
-export function fetchPostDistributeCreate(data: Distribute.Params.Model) {
-  return request.post({
-    url: '/distribute/create',
-    data
+export function fetchGetDistributeDetail(params: {id:number}) {
+  return request.get<Distribute.Response.Detail>({
+    url: '/distribute/detail',
+    params
   })
 }
-
-export function fetchPostDistributeCancel(data: Distribute.Params.Cancel) {
+export function fetchPostDistributeCancel(data:Distribute.Params.Cancel) {
   return request.post({
     url: '/distribute/cancel',
     data

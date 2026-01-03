@@ -9,7 +9,6 @@
           v-model="activeKey"
           @tab-change="changeMneu">
             <ElTabPane label="订单详情" name="detail" />
-            <ElTabPane label="派单记录" name="distribute"/>
             <ElTabPane label="订单日记" name="logs"/>
         </ElTabs>
         <component :is="orderMap[activeKey]" :id="id"/>
@@ -20,9 +19,7 @@
 import type { Component } from 'vue';
 import { TabPaneName } from 'element-plus';
 import OrderDetail from './order-detail.vue';
-import OrderDistributeList from './order-distribute-list.vue';
 import OrderLogList from './order-log-list.vue';
-// import OrderDistributeList from './order-distribute-list.vue';
 interface Props {
     modelValue: boolean
     id?: number | null
@@ -48,7 +45,6 @@ const changeMneu = (name: TabPaneName)=>{
 }
 const orderMap: Record<string, Component> = {
     "detail": OrderDetail,
-    "distribute":OrderDistributeList,
     "logs":OrderLogList,
 };
 

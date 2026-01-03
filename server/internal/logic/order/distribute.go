@@ -30,7 +30,8 @@ func (s *sOrder) Distribute(ctx context.Context, req *dto_order.Distribute) (err
 		Data(g.Map{
 			dao.SysDistribute.Columns().WitkeyId:   req.WitkeyId,
 			dao.SysDistribute.Columns().OrderId:    req.Id,
-			dao.SysDistribute.Columns().IsCancel:   consts.Not,
+			dao.SysDistribute.Columns().Status:     consts.DistributeStatusPending,
+			dao.SysDistribute.Columns().Type:       req.Type,
 			dao.SysDistribute.Columns().ManageId:   ctx.Value("userId"),
 			dao.SysDistribute.Columns().CreateTime: gtime.Now(),
 		}).

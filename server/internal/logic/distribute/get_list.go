@@ -2,7 +2,6 @@ package distribute
 
 import (
 	"context"
-
 	"server/internal/dao"
 	"server/internal/model/entity"
 	dao_distribute "server/internal/type/distribute/dao"
@@ -19,13 +18,8 @@ func (s *sDistribute) GetList(ctx context.Context, req *dto_distribute.Query) (t
 		Page(req.Page, req.Limit).
 		OrderDesc(dao.SysDistribute.Columns().CreateTime)
 	if req.Name != "" {
-		userId, err := dao.SysUser.Ctx(ctx).
-			WhereLike(dao.SysUser.Columns().Name, "%"+req.Name+"%").Value(dao.SysUser.Columns().Id)
-		if err != nil {
-			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-		}
 		witkeyId, err := dao.SysWitkey.Ctx(ctx).
-			Where(dao.SysWitkey.Columns().UserId, userId).Value(dao.SysWitkey.Columns().Id)
+			Where(dao.SysWitkey.Columns().Name, req.Name).Value(dao.SysWitkey.Columns().Id)
 		if err != nil {
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
@@ -58,23 +52,19 @@ func (s *sDistribute) GetList(ctx context.Context, req *dto_distribute.Query) (t
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
 
-		//  订单编号
-		orderCode, err := dao.SysOrder.Ctx(ctx).
-			Where(dao.SysOrder.Columns().Id, v.OrderId).
+		order, err := dao.SysOrder.Ctx(ctx).Where(dao.SysOrder.Columns().Id, v.OrderId).
 			Value(dao.SysOrder.Columns().Code)
 		if err != nil {
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
-		entity.Code = orderCode.String()
+		entity.Order = order.String()
 
-		//  威客
-		witkey, err := dao.SysWitkey.Ctx(ctx).
-			Where(dao.SysWitkey.Columns().Id, v.WitkeyId).
-			Fields(dao.SysWitkey.Columns().UserId, dao.SysWitkey.Columns().TitleId, dao.SysWitkey.Columns().GameId).
-			One()
+		witkey, err := dao.SysWitkey.Ctx(ctx).Where(dao.SysWitkey.Columns().Id, v.WitkeyId).
+			Fields(dao.SysWitkey.Columns().Name, dao.SysWitkey.Columns().TitleId, dao.SysWitkey.Columns().GameId).One()
 		if err != nil {
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
+		entity.Witkey = gconv.String(witkey.GMap().Get(dao.SysWitkey.Columns().Name))
 
 		game, err := dao.SysGame.Ctx(ctx).
 			Where(dao.SysGame.Columns().Id,
@@ -93,15 +83,6 @@ func (s *sDistribute) GetList(ctx context.Context, req *dto_distribute.Query) (t
 			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}
 		entity.Title = title.String()
-
-		user, err := dao.SysUser.Ctx(ctx).
-			Where(dao.SysUser.Columns().Id,
-				witkey.GMap().Get(dao.SysWitkey.Columns().UserId)).
-			Value(dao.SysUser.Columns().Name)
-		if err != nil {
-			return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-		}
-		entity.Witkey = user.String()
 
 		manage, err := dao.SysManage.Ctx(ctx).
 			Where(dao.SysManage.Columns().Id,

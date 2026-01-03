@@ -2,48 +2,25 @@ package distribute
 
 import (
 	"context"
-
 	"server/internal/consts"
 	"server/internal/dao"
 	dto_distribute "server/internal/type/distribute/dto"
 	utils_error "server/internal/utils/error"
 	"server/internal/utils/response"
-
-	"github.com/gogf/gf/v2/util/gconv"
 )
 
 // CheckCancel implements service.IDistribute.
 func (s *sDistribute) CheckCancel(ctx context.Context, req *dto_distribute.Cancel) (err error) {
-	obj, err := dao.SysDistribute.Ctx(ctx).Where(dao.SysDistribute.Columns().Id, req.Id).
-		Fields(dao.SysDistribute.Columns().OrderId,
-			dao.SysDistribute.Columns().IsCancel).One()
+	exist, err := dao.SysDistribute.Ctx(ctx).
+		Where(dao.SysDistribute.Columns().Id, req.Id).
+		Where(dao.SysDistribute.Columns().Status, consts.DistributeStatusCancel).
+		Exist()
 	if err != nil {
 		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
 
-	if gconv.Int(obj.GMap().Get(dao.SysDistribute.Columns().IsCancel)) == consts.Yes {
-		return utils_error.Err(response.FAILD, "派单已取消，无法重新取消派单")
+	if exist {
+		return utils_error.Err(response.FAILD, "该派单已经取消过，请勿重复操作")
 	}
-
-	orderStatus, err := dao.SysOrder.Ctx(ctx).
-		Where(dao.SysOrder.Columns().Id, obj.GMap().Get(dao.SysDistribute.Columns().OrderId)).
-		Value(dao.SysOrder.Columns().Status)
-	if err != nil {
-		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
-
-	if orderStatus.Int() == consts.OrderStatusCancel {
-		return utils_error.Err(response.FAILD, "订单已取消，无法取消派单")
-	}
-	if orderStatus.Int() == consts.OrderStatusComplete {
-		return utils_error.Err(response.FAILD, "订单已完成，无法取消派单")
-	}
-	if orderStatus.Int() == consts.OrderStatusPendingPayment {
-		return utils_error.Err(response.FAILD, "订单未支付，无法取消派单")
-	}
-	if orderStatus.Int() == consts.OrderStatusRefund {
-		return utils_error.Err(response.FAILD, "订单已退款，无法取消派单")
-	}
-
 	return
 }

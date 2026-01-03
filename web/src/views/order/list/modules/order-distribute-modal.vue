@@ -31,10 +31,9 @@
 import {  fetchPostOrderDistribute } from '@/api/order';
 import { fetchGetWitkeyList } from '@/api/witkey';
 import { useTable } from '@/hooks';
-import { ElImage, ElRate, ElTag } from 'element-plus'
-
-import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
+import { ElButton, ElImage, ElMessageBox, ElRate, ElTag } from 'element-plus'
 import OrderDistributeSearch from './order-distribute-search.vue';
+import { DistributeType } from '@/enums/typeEnum';
 
 interface Props {
     visible: boolean
@@ -111,8 +110,7 @@ const {
                     previewTeleported: true
                     }),
                     h('div', { class: 'ml-2' }, [
-                    h('p', { class: 'user-name' }, row.user.name),
-                    h('p', { class: 'email' }, row.user.phone)
+                        h('p', { class: 'user-name' }, row.user.name),
                     ])
                 ])
                 }
@@ -142,22 +140,24 @@ const {
                 }
             },
             {
-                prop: 'createTime',
-                label: '入驻日期',
-                sortable: true
-            },
-            {
                 prop: 'operation',
                 label: '操作',
-                width: 60,
+                width: 200,
                 fixed: 'right', // 固定列
                 formatter: (row) =>{
                     return h('div', { class: 'order flex-c' }, [
-                        h(ArtButtonTable, {
-                            type: 'edit',
-                            icon: 'solar:chat-round-check-bold',
-                            onClick: () => handleSubmit(row)
-                        }),
+                        h(ElButton, {
+                            type: "primary",
+                            plain: true,
+                            size: 'small',
+                            onClick: () => handleSubmit(row.id,DistributeType.Team)
+                        },()=>"自带队伍",),
+                        h(ElButton, {
+                            type: "primary",
+                            plain: true,
+                            size: 'small',
+                            onClick: () => handleSubmit(row.id,DistributeType.Self)
+                        },()=>"个人接单",),
                     ])
                 }
             }
@@ -227,17 +227,47 @@ const handleCancel = (): void => {
  * 提交表单
  * 验证通过后调用接口保存数据
  */
-const handleSubmit = async (row:Witkey.Response.Info) => {
-    try {
-        // TODO: 调用新增/编辑接口
-        await fetchPostOrderDistribute({
-            id:props.id!,
-            witkeyId: row.id
+const handleSubmit = async (id:number,type:number) => {
+    if (type == DistributeType.Self) {
+        ElMessageBox.confirm(`确认派发给他个人吗`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'primary'
+        }).then(async() => {
+            // TODO: 调用删除接口
+            await fetchPostOrderDistribute({
+                id:props.id!,
+                witkeyId: id,
+                type:DistributeType.Self
+            })
+            ElMessage.success('派单成功')
+            emit('submit')
+            handleCancel()
         })
-        ElMessage.success('派单成功')
-        emit('submit')
-        handleCancel()
-    } catch (error) {
-    }
+        .catch(() => {
+            ElMessage.info('已取消')
+        })
+   }
+   if (type == DistributeType.Team) {
+        ElMessageBox.confirm(`确认派发给他队伍吗`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'primary'
+        }).then(async() => {
+            // TODO: 调用删除接口
+            await fetchPostOrderDistribute({
+                id:props.id!,
+                witkeyId: id,
+                type:DistributeType.Team
+            })
+            ElMessage.success('派单成功')
+            emit('submit')
+            handleCancel()
+        })
+        .catch(() => {
+            ElMessage.info('已取消')
+        })
+   }
+
 }
 </script>

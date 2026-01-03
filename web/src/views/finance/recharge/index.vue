@@ -46,7 +46,6 @@ import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
 import RechargeSearch from './modules/recharge-search.vue'
 import { ApplyStatus } from '@/enums/statusEnum'
 import { fetchGetRechargeList, fetchPostRechargeDelete } from '@/api/recharge'
-import { RechargePayMode } from '@/enums/typeEnum'
 import { PayMode } from '@/enums/modeEnum'
 
 

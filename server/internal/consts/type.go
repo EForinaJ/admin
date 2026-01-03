@@ -52,3 +52,8 @@ const (
 	OrderLogTypeStart            = 9  // 开始服务
 	OrderLogTypeRefund           = 10 // 订单手动退款
 )
+
+const (
+	DistributeTypeTeam = 1 // 自带队伍
+	DistributeTypeSelf = 2 //自己个人
+)

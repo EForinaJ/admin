@@ -24,9 +24,9 @@ type SysDistributeColumns struct {
 	OrderId    string //
 	WitkeyId   string //
 	ManageId   string //
-	IsCancel   string //
-	Images     string //
+	Type       string //
 	Reason     string //
+	Status     string //
 	CreateTime string //
 }
 
@@ -36,9 +36,9 @@ var sysDistributeColumns = SysDistributeColumns{
 	OrderId:    "order_id",
 	WitkeyId:   "witkey_id",
 	ManageId:   "manage_id",
-	IsCancel:   "is_cancel",
-	Images:     "images",
+	Type:       "type",
 	Reason:     "reason",
+	Status:     "status",
 	CreateTime: "create_time",
 }
 

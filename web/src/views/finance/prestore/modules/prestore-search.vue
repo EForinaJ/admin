@@ -42,17 +42,11 @@
   // 表单配置
   const formItems = computed(() => [
     {
-      label: '预存威客',
+      label: '用户昵称',
       key: 'name',
       type: 'input',
-      placeholder: '请输入威客名称',
+      placeholder: '请输入用户昵称',
       clearable: true
-    },
-    {
-      label: '预存号',
-      key: 'code',
-      type: 'input',
-      props: { placeholder: '请输入预存号' }
     },
   ])
 

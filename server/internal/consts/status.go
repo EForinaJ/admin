@@ -25,3 +25,10 @@ const (
 	OrderStatusCancel         = 5 // 已取消
 	OrderStatusRefund         = 6 // 已退款
 )
+
+const (
+	DistributeStatusPending    = 1 // 待服务
+	DistributeStatusInProgress = 2 // 进行中
+	DistributeStatusComplete   = 3 // 已完成
+	DistributeStatusCancel     = 4 // 已取消
+)

@@ -37,16 +37,16 @@ func (s *sOrder) CheckStartService(ctx context.Context, id int64) (err error) {
 		return utils_error.Err(response.FAILD, "订单已退款，无法开始")
 	}
 
-	count, err := dao.SysDistribute.Ctx(ctx).
-		Where(dao.SysDistribute.Columns().OrderId, id).
-		Where(dao.SysDistribute.Columns().IsCancel, consts.Not).Count()
-	if err != nil {
-		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
+	// count, err := dao.SysDistribute.Ctx(ctx).
+	// 	Where(dao.SysDistribute.Columns().OrderId, id).
+	// 	Where(dao.SysDistribute.Columns().IsCancel, consts.Not).Count()
+	// if err != nil {
+	// 	return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
+	// }
 
-	if count < gconv.Int(order.GMap().Get(dao.SysOrder.Columns().WitkeyCount)) {
-		return utils_error.Err(response.FAILD, "订单服务人数未达到")
-	}
+	// if count < gconv.Int(order.GMap().Get(dao.SysOrder.Columns().WitkeyCount)) {
+	// 	return utils_error.Err(response.FAILD, "订单服务人数未达到")
+	// }
 
 	return
 }

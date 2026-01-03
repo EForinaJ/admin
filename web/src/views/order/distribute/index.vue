@@ -13,7 +13,6 @@
       <ArtTableHeader v-model:columns="columnChecks" :loading="loading" @refresh="refreshData">
         <template #left>
           <ElSpace wrap>
-            <ElButton v-auth="'create'" @click="handleCreate" v-ripple>新增派单</ElButton>
             <ElButton 
             :disabled="selectedRows.length == 0"
             v-auth="'delete'" 
@@ -41,11 +40,16 @@
         @submit="refreshData"
       />
 
-      <DistributeModal
-        v-model:visible="distributeModalVisible"
+      <DistributeCancelModal
+        v-model:visible="cancelModalVisible"
         :id="id"
         @submit="refreshData"
       />
+      <DistributeViewDrawer
+          v-model="viewVisible"
+          :id="id"
+          @submit="refreshData"
+        />
     </ElCard>
   </div>
 </template>
@@ -55,10 +59,12 @@ import { useTable } from '@/hooks/core/useTable'
 import { ElTag, ElMessageBox } from 'element-plus'
 import { useAuth } from '@/hooks'
 import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
-import DistributeModal from './modules/distribute-modal.vue'
 import { fetchGetDistributeList } from '@/api/distribute'
 import DistributeCancelModal from './modules/distribute-cancel-modal.vue'
 import DistributeSearch from './modules/distribute-search.vue'
+import { DistributeType } from '@/enums/typeEnum'
+import { DistributeStatus } from '@/enums/statusEnum'
+import DistributeViewDrawer from './modules/distribute-view-drawer.vue'
 
 const { hasAuth } = useAuth();
 defineOptions({ name: 'Distribute' })
@@ -66,7 +72,7 @@ defineOptions({ name: 'Distribute' })
 
 // 弹窗相关
 const cancelModalVisible = ref(false)
-const distributeModalVisible = ref(false)
+const viewVisible = ref(false)
 const id = ref<number>(0)
 // 选中行
 const selectedRows = ref<number[]>([])
@@ -78,21 +84,35 @@ const searchForm = ref({
   status: undefined
 })
 
-
-const IS_CANCEL = {
-  1: { type: 'primary' as const, text: '未取消' },
-  2: { type: 'danger' as const, text: '取消' },
+const STATUS = {
+  [DistributeStatus.Pending]: { type: 'primary' as const, text: '待服务' },
+  [DistributeStatus.InProgress]: { type: 'primary' as const, text: '进行中' },
+  [DistributeStatus.Completed]: { type: 'success' as const, text: '已完成' },
+  [DistributeStatus.Cancel]: { type: 'danger' as const, text: '已取消' },
 } as const
 
-const getIsCancel = (isCancel: number) => {
+const getStatus = (isCancel: number) => {
   return (
-    IS_CANCEL[isCancel as keyof typeof IS_CANCEL] || {
+    STATUS[isCancel as keyof typeof STATUS] || {
       type: 'info' as const,
       text: '未知'
     }
   )
 }
 
+const TYPE = {
+  [DistributeType.Self]: { type: 'primary' as const, text: '个人服务' },
+  [DistributeType.Team]: { type: 'primary' as const, text: '自带队伍' },
+} as const
+
+const getType = (type: number) => {
+  return (
+    TYPE[type as keyof typeof TYPE] || {
+      type: 'info' as const,
+      text: '未知'
+    }
+  )
+}
 const {
   columns,
   columnChecks,
@@ -121,47 +141,58 @@ const {
       { type: 'selection' }, // 勾选列
       { prop: 'id', width: 60, label: 'ID' }, // 序号
       {
-        prop: 'code',
-        label: '订单号',
-        width: 200,
+          prop: 'order',
+          label: '订单号',
+          width: 240,
+          formatter: (row) => {
+              return h('p', { }, row.order)
+          }
       },
       {
-        prop: 'manage',
-        label: '派单者',
-        width: 160,
-        formatter: (row) => {
-          return h('p', { }, row.manage)
-        }
+          prop: 'manage',
+          label: '派单客服',
+          width: 160,
+          formatter: (row) => {
+              return h('p', { }, row.manage)
+          }
       },
       {
-        prop: 'witkey',
-        label: '接单者',
-        width: 160,
-        formatter: (row) => {
-          return h('p', { }, row.witkey)
-        }
+          prop: 'witkey',
+          label: '接单者',
+          width: 160,
+          formatter: (row) => {
+              return h('p', { }, row.witkey)
+          }
       },
       {
-        prop: 'game',
-        label: '游戏领域',
-        formatter: (row) => {
-            return h(ElTag, { type:"primary" }, () => row.game )
-        }
+          prop: 'game',
+          label: '游戏领域',
+          formatter: (row) => {
+              return h(ElTag, { type:"primary" }, () => row.game )
+          }
       },
       {
-        prop: 'title',
-        label: '所属头衔',
-        formatter: (row) => {
-            return h(ElTag, { type:"primary" }, () => row.title )
-        }
+          prop: 'title',
+          label: '所属头衔',
+          formatter: (row) => {
+              return h(ElTag, { type:"primary" }, () => row.title )
+          }
       },
       {
-        prop: 'isCancel',
-        label: '是否取消',
-        formatter: (row) => {
-          const statusConfig = getIsCancel(row.isCancel)
+          prop: 'type',
+          label: '派单类型',
+          formatter: (row) => {
+          const typeConfig = getType(row.type)
+          return h(ElTag, { type: typeConfig.type }, () => typeConfig.text)
+          }
+      },
+      {
+          prop: 'status',
+          label: '服务状态',
+          formatter: (row) => {
+          const statusConfig = getStatus(row.status)
           return h(ElTag, { type: statusConfig.type }, () => statusConfig.text)
-        }
+          }
       },
       {
         prop: 'createTime',
@@ -175,11 +206,11 @@ const {
         fixed: 'right', // 固定列
         formatter: (row) =>{
           return h('div', { class: 'distribute flex-c' }, [
-            ((hasAuth("view") && row.isCancel == 2) && h(ArtButtonTable, {
+            ((hasAuth("view")) && h(ArtButtonTable, {
               type: 'view',
               onClick: () => handleView(row)
             })),
-            ((hasAuth("cancel") && row.isCancel == 1) && h(ArtButtonTable, {
+            ((hasAuth("cancel") && row.status != DistributeStatus.Cancel) && h(ArtButtonTable, {
               icon: 'solar:close-circle-bold',
               type: 'delete',
               onClick: () => handleCancel(row)
@@ -214,38 +245,21 @@ const handleSearch = (params: Record<string, any>) => {
 }
 
 const handleView = (row:Distribute.Response.Info) => {
-  if (row.isCancel != 2) {
-    ElMessage.error('派单未取消')
-    return
-  }
-  ElMessageBox.confirm(row.reason, '取消原因', {
-    // confirmButtonText: '确定',
-    // cancelButtonText: '取消',
-    showCancelButton:false,
-    showConfirmButton:false,
-    type: 'info'
-  }).then(async() => {
-  })
-  .catch(() => {
+  id.value = row.id
+  nextTick(() => {
+    viewVisible.value = true
   })
 }
 
+
 const handleCancel = (row:Distribute.Response.Info) => {
-   id.value = row.id
+  id.value = row.id
   nextTick(() => {
     cancelModalVisible.value = true
   })
 }
 
 
-/**
- * 显示派单弹窗
- */
-const handleCreate = (): void => {
-  nextTick(() => {
-    distributeModalVisible.value = true
-  })
-}
 
 const handleBatchDelete = () =>{
   if (selectedRows.value.length != 0) {
